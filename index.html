@@ -642,7 +642,7 @@
   <div class="home-card">
     <div style="margin-bottom: 24px;">
       <h3 style="font-family:'Fraunces', serif; font-size: 22px; margin: 0 0 8px;">Sincroniza tus clases</h3>
-      <p>Cada horario vive bajo un código único. Créalo la primera vez, o entra con el código que te compartieron para ver y editar tu horario en cualquier dispositivo.</p>
+      <p>Cada horario vive bajo un código único. Créalo la primera vez, o entra con el código existente que te compartieron para ver y editar tu horario en cualquier dispositivo.</p>
     </div>
     
     <div class="field">
@@ -673,6 +673,9 @@
         <a onclick="copyCode()" style="color:var(--teal); cursor:pointer; text-decoration:underline;">copiar</a>
         · <a onclick="switchCode()" style="color:var(--ink-soft); cursor:pointer; text-decoration:underline;">cambiar</a>
       </span>
+      <div style="margin-top: 8px;">
+        <button class="ghost" style="padding: 4px 10px; font-size: 11px;" onclick="switchCode()">🏠 Regresar al menú principal</button>
+      </div>
     </div>
   </header>
 
@@ -749,8 +752,7 @@
 
 <script>
 // ==================================================
-// Firebase (base de datos en la nube para sincronizar
-// entre dispositivos con el mismo código de acceso)
+// Firebase (base de datos en la nube para sincronizar)
 // ==================================================
 const firebaseConfig = {
   apiKey: "AIzaSyCJZzIsAC73hrPqboQg3Lz8tYoOV6IshFI",
@@ -776,7 +778,7 @@ try{
 }
 
 // ==================================================
-// Código de acceso: cada horario vive en su propio código
+// Código de acceso
 // ==================================================
 const CODE_KEY = 'horario-access-code';
 let accessCode = localStorage.getItem(CODE_KEY);
@@ -802,16 +804,28 @@ function createNewCode(){
   initApp();
 }
 
-function joinWithCode(){
+async function joinWithCode(){
   const input = document.getElementById('gateCodeInput').value.trim().toUpperCase();
   if(!input){ alert('Escribe un código para continuar.'); return; }
+  
+  if(firebaseReady){
+    try{
+      const snap = await db.collection('horarios').doc(input).get();
+      if(!snap.exists){
+        alert('El código "' + input + '" no está registrado. Si es un horario nuevo, usa el botón de abajo para crearlo.');
+        return;
+      }
+    }catch(err){
+      console.error('Error verificando código:', err);
+    }
+  }
+
   accessCode = input;
   localStorage.setItem(CODE_KEY, accessCode);
   initApp();
 }
 
 function switchCode(){
-  if(!confirm('Vas a salir de este horario.\n\n¿Ya tienes tu código actual apuntado en algún lado? Si no, cancela y cópialo primero.')) return;
   if(unsubscribeSnapshot) unsubscribeSnapshot();
   localStorage.removeItem(CODE_KEY);
   location.reload();
@@ -881,17 +895,23 @@ async function manualSave() {
   if (statusEl) statusEl.textContent = 'Guardando...';
   if (statusCalEl) statusCalEl.textContent = 'Guardando...';
 
-  await persistClasses();
-  await persistSpecialSessions();
-  await persistEvents();
+  try {
+    await persistClasses();
+    await persistSpecialSessions();
+    await persistEvents();
 
-  const successMsg = '✓ Cambios guardados exitosamente';
-  if (statusEl) statusEl.textContent = successMsg;
-  if (statusCalEl) statusCalEl.textContent = successMsg;
+    const successMsg = '✓ Cambios guardados exitosamente';
+    if (statusEl) statusEl.textContent = successMsg;
+    if (statusCalEl) statusCalEl.textContent = successMsg;
+  } catch (err) {
+    const errorMsg = '⚠ Error al guardar';
+    if (statusEl) statusEl.textContent = errorMsg;
+    if (statusCalEl) statusCalEl.textContent = errorMsg;
+  }
   
   setTimeout(() => { 
-    if (statusEl) statusEl.textContent = ''; 
-    if (statusCalEl) statusCalEl.textContent = ''; 
+    if (statusEl && statusEl.textContent.startsWith('✓')) statusEl.textContent = ''; 
+    if (statusCalEl && statusCalEl.textContent.startsWith('✓')) statusCalEl.textContent = ''; 
   }, 4000);
 }
 
@@ -901,7 +921,6 @@ const START_HOUR = 6.5;
 const END_HOUR = 15;    
 const PX_PER_HOUR = 56;
 
-// Horario por defecto VACÍO al crear o entrar por primera vez
 let classes = [];
 let specialSessions = [];
 
@@ -935,12 +954,8 @@ async function loadClasses(){
 async function persistClasses(){
   const cacheKey = 'cache-classes-'+accessCode;
   localStorage.setItem(cacheKey, JSON.stringify(classes));
-  try{
-    if(firebaseReady && accessCode){
-      await db.collection('horarios').doc(accessCode).set({classes}, {merge:true});
-    }
-  }catch(err){
-    console.error('Storage error:', err);
+  if(firebaseReady && accessCode){
+    await db.collection('horarios').doc(accessCode).set({classes}, {merge:true});
   }
 }
 
@@ -970,12 +985,8 @@ async function loadSpecialSessions(){
 async function persistSpecialSessions(){
   const cacheKey = 'cache-special-'+accessCode;
   localStorage.setItem(cacheKey, JSON.stringify(specialSessions));
-  try{
-    if(firebaseReady && accessCode){
-      await db.collection('horarios').doc(accessCode).set({specialSessions}, {merge:true});
-    }
-  }catch(err){
-    console.error('Storage error:', err);
+  if(firebaseReady && accessCode){
+    await db.collection('horarios').doc(accessCode).set({specialSessions}, {merge:true});
   }
 }
 
@@ -1409,12 +1420,8 @@ async function loadEvents(){
 async function persistEvents(){
   const cacheKey = 'cache-events-'+accessCode;
   localStorage.setItem(cacheKey, JSON.stringify(events));
-  try{
-    if(firebaseReady && accessCode){
-      await db.collection('horarios').doc(accessCode).set({events}, {merge:true});
-    }
-  }catch(err){
-    console.error('Error guardando eventos:', err);
+  if(firebaseReady && accessCode){
+    await db.collection('horarios').doc(accessCode).set({events}, {merge:true});
   }
 }
 
