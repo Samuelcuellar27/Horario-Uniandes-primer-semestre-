@@ -356,6 +356,86 @@
     .daycol-head .full{ font-size:12px; }
     .class-block .name{ font-size:11px; }
   }
+
+  /* ---- Mobile agenda (day-by-day list) ---- */
+  .agenda{ display:none; }
+  @media (max-width: 620px){
+    .board{ display:none; }
+    .agenda{ display:block; }
+  }
+  .agenda-day{
+    background:var(--card);
+    border:1.5px solid var(--ink);
+    border-radius:4px;
+    margin-bottom:14px;
+    overflow:hidden;
+    box-shadow: 0 3px 0 var(--ink);
+  }
+  .agenda-day-head{
+    background:var(--parchment-dim);
+    border-bottom:1.5px solid var(--ink);
+    padding:10px 14px;
+    display:flex;
+    align-items:baseline;
+    gap:8px;
+  }
+  .agenda-day-head .short{
+    font-family:'IBM Plex Mono', monospace;
+    font-size:11px;
+    letter-spacing:.1em;
+    text-transform:uppercase;
+    color:var(--teal);
+    font-weight:600;
+  }
+  .agenda-day-head .full{
+    font-family:'Fraunces', serif;
+    font-size:17px;
+    font-weight:600;
+  }
+  .agenda-empty{
+    padding:14px;
+    font-family:'IBM Plex Mono', monospace;
+    font-size:12px;
+    color:var(--ink-soft);
+    font-style:italic;
+  }
+  .agenda-item{
+    display:flex;
+    gap:12px;
+    padding:12px 14px;
+    border-top:1px solid var(--line);
+    cursor:pointer;
+    align-items:flex-start;
+  }
+  .agenda-item:first-child{ border-top:none; }
+  .agenda-item:active{ background:var(--parchment-dim); }
+  .agenda-item .swatch{
+    width:5px;
+    align-self:stretch;
+    border-radius:3px;
+    flex-shrink:0;
+  }
+  .agenda-item .time{
+    font-family:'IBM Plex Mono', monospace;
+    font-size:11.5px;
+    color:var(--ink-soft);
+    width:56px;
+    flex-shrink:0;
+    line-height:1.4;
+    padding-top:2px;
+  }
+  .agenda-item .info .name{
+    font-family:'Fraunces', serif;
+    font-weight:600;
+    font-size:15px;
+    line-height:1.2;
+  }
+  .agenda-item .info .room{
+    font-family:'IBM Plex Mono', monospace;
+    font-size:11.5px;
+    color:var(--ink-soft);
+    margin-top:2px;
+  }
 </style>
 </head>
 <body>
@@ -382,6 +462,8 @@
   <div class="board">
     <div class="grid" id="grid"></div>
   </div>
+
+  <div class="agenda" id="agenda"></div>
 
   <div class="saturday">
     <h2>Sesiones especiales — Capacitación para Estudiantes</h2>
@@ -547,6 +629,54 @@ function renderBlocks(){
       block.onclick = ()=> openDetail(cls.id);
       grid.appendChild(block);
     });
+  });
+
+  renderAgenda();
+}
+
+const COLOR_HEX = {
+  c0:'#C89B3C', c1:'#2E6E62', c2:'#B96A4A', c3:'#5A5A9E', c4:'#B0567D', c5:'#3B7FA0', c6:'#7A8A2E'
+};
+
+function renderAgenda(){
+  const agenda = document.getElementById('agenda');
+  agenda.innerHTML = '';
+  DAYS.forEach(day=>{
+    const dayBlock = document.createElement('div');
+    dayBlock.className = 'agenda-day';
+
+    const head = document.createElement('div');
+    head.className = 'agenda-day-head';
+    head.innerHTML = `<span class="short">${day}</span><span class="full">${DAY_FULL[day]}</span>`;
+    dayBlock.appendChild(head);
+
+    const dayClasses = classes
+      .filter(c => c.dias.includes(day))
+      .sort((a,b)=> a.inicio.localeCompare(b.inicio));
+
+    if(dayClasses.length === 0){
+      const empty = document.createElement('div');
+      empty.className = 'agenda-empty';
+      empty.textContent = 'Sin clases';
+      dayBlock.appendChild(empty);
+    } else {
+      dayClasses.forEach(cls=>{
+        const item = document.createElement('div');
+        item.className = 'agenda-item';
+        item.innerHTML = `
+          <div class="swatch" style="background:${COLOR_HEX[cls.color]||'#C89B3C'}"></div>
+          <div class="time">${cls.inicio}<br>${cls.fin}</div>
+          <div class="info">
+            <div class="name">${cls.name}</div>
+            <div class="room">${cls.salon || '—'}${cls.edificio ? ' · '+cls.edificio.split('(')[0].trim() : ''}</div>
+          </div>
+        `;
+        item.onclick = ()=> openDetail(cls.id);
+        dayBlock.appendChild(item);
+      });
+    }
+
+    agenda.appendChild(dayBlock);
   });
 }
 
