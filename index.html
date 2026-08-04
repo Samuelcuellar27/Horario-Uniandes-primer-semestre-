@@ -45,7 +45,6 @@
   }
   .wrap{max-width:1180px;margin:0 auto;}
 
-  /* ---- Pantalla de Inicio ---- */
   #homeScreen {
     display: flex;
     flex-direction: column;
@@ -146,7 +145,6 @@
   .tab-btn:hover{ background:transparent; color:var(--ink); }
   .tab-btn.on{ color:var(--ink); border-bottom-color:var(--ochre-deep); }
 
-  /* ---- Calendar ---- */
   .cal-toolbar{
     display:flex;
     justify-content:space-between;
@@ -304,7 +302,6 @@
     outline: 2px solid var(--teal); outline-offset:2px;
   }
 
-  /* ---- Grid timetable ---- */
   .board{
     position:relative;
     background:var(--card);
@@ -699,9 +696,6 @@
 </div>
 
 <script>
-// ==================================================
-// Firebase (base de datos en la nube para sincronizar)
-// ==================================================
 const firebaseConfig = {
   apiKey: "AIzaSyCJZzIsAC73hrPqboQg3Lz8tYoOV6IshFI",
   authDomain: "horario-uniandes.firebaseapp.com",
@@ -725,9 +719,6 @@ try{
   firebaseReady = false;
 }
 
-// ==================================================
-// Código de acceso
-// ==================================================
 const CODE_KEY = 'horario-access-code';
 let accessCode = localStorage.getItem(CODE_KEY);
 let unsubscribeSnapshot = null;
@@ -752,24 +743,13 @@ function createNewCode(){
   initApp();
 }
 
-async function joinWithCode(){
+function joinWithCode(){
   const input = document.getElementById('gateCodeInput').value.trim().toUpperCase();
-  if(!input){ alert('Escribe un código para continuar.'); return; }
-  
-  if(firebaseReady){
-    try{
-      const snap = await db.collection('horarios').doc(input).get();
-      if(!snap.exists){
-        // Verificamos si de casualidad tiene caché local o si el usuario quiere crearlo
-        const confirmNew = confirm('El código "' + input + '" no está registrado en la nube.\n\n¿Quieres usar este código para crear un horario nuevo con él? (Pulsa Aceptar para crearlo, o Cancelar para escribir otro).');
-        if(!confirmNew) return;
-      }
-    }catch(err){
-      console.warn('Advertencia de red/Firebase al verificar código:', err);
-      // Si hay un fallo de red o conectividad, permitimos entrar de todas formas para no bloquear al usuario
-    }
+  if(!input){ 
+    alert('Escribe un código para continuar.'); 
+    return; 
   }
-
+  
   accessCode = input;
   localStorage.setItem(CODE_KEY, accessCode);
   initApp();
@@ -812,7 +792,7 @@ function attachSyncListener(){
       renderUpcoming();
     }
   }, err=>{
-    console.error('Error de sincronización en vivo:', err);
+    console.warn('Aviso de sincronización:', err);
   });
 }
 
@@ -835,9 +815,6 @@ async function initApp(){
   }
 }
 
-// ==================================================
-// GUARDADO MANUAL DE CAMBIOS
-// ==================================================
 async function manualSave() {
   const statusEl = document.getElementById('saveStatus');
   const statusCalEl = document.getElementById('saveStatusCal');
@@ -879,64 +856,75 @@ let colorCursor = 0;
 
 async function loadClasses(){
   const cacheKey = 'cache-classes-'+accessCode;
+  const cached = localStorage.getItem(cacheKey);
+  if(cached) {
+    try { classes = JSON.parse(cached); } catch(e){ classes = []; }
+  } else {
+    classes = [];
+  }
+  renderBlocks();
+
   try{
     if(firebaseReady && accessCode){
       const snap = await db.collection('horarios').doc(accessCode).get();
       if(snap.exists && snap.data().classes !== undefined){
         classes = snap.data().classes;
         localStorage.setItem(cacheKey, JSON.stringify(classes));
-      } else {
-        classes = [];
+        renderBlocks();
+      } else if(!snap.exists){
         await persistClasses();
       }
-    } else {
-      const cached = localStorage.getItem(cacheKey);
-      if(cached) classes = JSON.parse(cached);
-      else classes = [];
     }
   }catch(err){
-    console.error('Error cargando clases:', err);
-    classes = [];
+    console.warn('No se pudo cargar de la nube, usando modo local:', err);
   }
-  renderBlocks();
 }
 
 async function persistClasses(){
   const cacheKey = 'cache-classes-'+accessCode;
   localStorage.setItem(cacheKey, JSON.stringify(classes));
   if(firebaseReady && accessCode){
-    await db.collection('horarios').doc(accessCode).set({classes}, {merge:true});
+    try {
+      await db.collection('horarios').doc(accessCode).set({classes}, {merge:true});
+    } catch(err){
+      console.warn('Error al guardar clases en nube:', err);
+    }
   }
 }
 
 async function loadSpecialSessions(){
   const cacheKey = 'cache-special-'+accessCode;
+  const cached = localStorage.getItem(cacheKey);
+  if(cached) {
+    try { specialSessions = JSON.parse(cached); } catch(e){ specialSessions = []; }
+  } else {
+    specialSessions = [];
+  }
+  renderSaturdays();
+
   try{
     if(firebaseReady && accessCode){
       const snap = await db.collection('horarios').doc(accessCode).get();
       if(snap.exists && snap.data().specialSessions !== undefined){
         specialSessions = snap.data().specialSessions;
         localStorage.setItem(cacheKey, JSON.stringify(specialSessions));
-      } else {
-        specialSessions = [];
+        renderSaturdays();
+      } else if(!snap.exists){
         await persistSpecialSessions();
       }
-    } else {
-      const cached = localStorage.getItem(cacheKey);
-      if(cached) specialSessions = JSON.parse(cached);
-      else specialSessions = [];
     }
   }catch(err){
-    specialSessions = [];
+    console.warn('Aviso especial:', err);
   }
-  renderSaturdays();
 }
 
 async function persistSpecialSessions(){
   const cacheKey = 'cache-special-'+accessCode;
   localStorage.setItem(cacheKey, JSON.stringify(specialSessions));
   if(firebaseReady && accessCode){
-    await db.collection('horarios').doc(accessCode).set({specialSessions}, {merge:true});
+    try {
+      await db.collection('horarios').doc(accessCode).set({specialSessions}, {merge:true});
+    } catch(err){}
   }
 }
 
@@ -985,7 +973,7 @@ function renderBlocks(){
   const gridRect = grid.getBoundingClientRect();
   const hourColWidth = 58;
   const dayColWidth = (gridRect.width - hourColWidth) / 5;
-  const headerHeight = document.querySelector('.daycol-head').getBoundingClientRect().height;
+  const headerHeight = document.querySelector('.daycol-head') ? document.querySelector('.daycol-head').getBoundingClientRect().height : 40;
 
   classes.forEach(cls=>{
     (cls.dias || []).forEach(day=>{
@@ -1344,6 +1332,12 @@ let calMonth = today.getMonth();
 
 async function loadEvents(){
   const cacheKey = 'cache-events-'+accessCode;
+  const cached = localStorage.getItem(cacheKey);
+  if(cached){
+    try { events = JSON.parse(cached); } catch(e){ events = {}; }
+  } else {
+    events = {};
+  }
   try{
     if(firebaseReady && accessCode){
       const snap = await db.collection('horarios').doc(accessCode).get();
@@ -1351,21 +1345,17 @@ async function loadEvents(){
         events = snap.data().events;
         localStorage.setItem(cacheKey, JSON.stringify(events));
       }
-    } else {
-      const cached = localStorage.getItem(cacheKey);
-      if(cached) events = JSON.parse(cached);
     }
-  }catch(err){
-    const cached = localStorage.getItem(cacheKey);
-    if(cached) events = JSON.parse(cached);
-  }
+  }catch(err){}
 }
 
 async function persistEvents(){
   const cacheKey = 'cache-events-'+accessCode;
   localStorage.setItem(cacheKey, JSON.stringify(events));
   if(firebaseReady && accessCode){
-    await db.collection('horarios').doc(accessCode).set({events}, {merge:true});
+    try {
+      await db.collection('horarios').doc(accessCode).set({events}, {merge:true});
+    } catch(err){}
   }
 }
 
