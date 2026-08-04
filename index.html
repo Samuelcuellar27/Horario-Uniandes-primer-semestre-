@@ -1,213 +1,397 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Horario de Arquitectura</title>
-    <style>
-        :root {
-            --primary: #2c3e50;
-            --secondary: #e74c3c;
-            --bg: #ecf0f1;
-        }
-        body { 
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; 
-            background-color: var(--bg);
-            color: #333;
-            padding: 20px; 
-            margin: 0;
-        }
-        .container { 
-            max-width: 900px; 
-            margin: auto; 
-            background: white; 
-            padding: 30px; 
-            border-radius: 10px; 
-            box-shadow: 0 4px 6px rgba(0,0,0,0.1); 
-        }
-        h1 { text-align: center; color: var(--primary); }
-        .controls { 
-            display: flex; 
-            justify-content: center; 
-            gap: 15px; 
-            margin-bottom: 25px; 
-            flex-wrap: wrap;
-        }
-        input[type="text"] { 
-            padding: 10px; 
-            border: 1px solid #bdc3c7; 
-            border-radius: 5px; 
-        }
-        button { 
-            padding: 10px 20px; 
-            border: none; 
-            border-radius: 5px; 
-            background-color: var(--primary); 
-            color: white; 
-            cursor: pointer; 
-            font-weight: bold;
-            transition: 0.3s;
-        }
-        button:hover { background-color: #1a252f; }
-        table { 
-            width: 100%; 
-            border-collapse: collapse; 
-            margin-top: 10px; 
-        }
-        th, td { 
-            border: 1px solid #ddd; 
-            padding: 12px; 
-            text-align: center; 
-        }
-        th { background-color: var(--primary); color: white; }
-        .cell-input { 
-            width: 90%; 
-            border: none; 
-            background: transparent; 
-            text-align: center;
-        }
-        .cell-input:focus { outline: none; border-bottom: 2px solid var(--secondary); }
-        #status { text-align: center; font-weight: bold; margin-top: 15px; color: var(--secondary); }
-    </style>
-</head>
-<body>
-    <div class="container">
-        <h1>Mi Horario Universitario</h1>
-        
-        <div class="controls">
-            <input type="text" id="accessCode" placeholder="Ingresa tu código (Ej: ANDES-01)">
-            <button id="loadBtn">Cargar</button>
-            <button id="saveBtn">Guardar Sincronización</button>
-        </div>
-        
-        <table id="scheduleTable">
-            <thead>
-                <tr>
-                    <th>Bloque</th>
-                    <th>Lunes</th>
-                    <th>Martes</th>
-                    <th>Miércoles</th>
-                    <th>Jueves</th>
-                    <th>Viernes</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr>
-                    <td>07:00 - 09:00</td>
-                    <td><input type="text" class="cell-input" id="L1" placeholder="Ej: Taller"></td>
-                    <td><input type="text" class="cell-input" id="M1"></td>
-                    <td><input type="text" class="cell-input" id="X1"></td>
-                    <td><input type="text" class="cell-input" id="J1"></td>
-                    <td><input type="text" class="cell-input" id="V1"></td>
-                </tr>
-                <tr>
-                    <td>09:00 - 11:00</td>
-                    <td><input type="text" class="cell-input" id="L2"></td>
-                    <td><input type="text" class="cell-input" id="M2"></td>
-                    <td><input type="text" class="cell-input" id="X2" placeholder="Ej: Dibujo"></td>
-                    <td><input type="text" class="cell-input" id="J2"></td>
-                    <td><input type="text" class="cell-input" id="V2"></td>
-                </tr>
-                <tr>
-                    <td>11:00 - 13:00</td>
-                    <td><input type="text" class="cell-input" id="L3"></td>
-                    <td><input type="text" class="cell-input" id="M3"></td>
-                    <td><input type="text" class="cell-input" id="X3"></td>
-                    <td><input type="text" class="cell-input" id="J3"></td>
-                    <td><input type="text" class="cell-input" id="V3"></td>
-                </tr>
-                <tr>
-                    <td>14:00 - 16:00</td>
-                    <td><input type="text" class="cell-input" id="L4"></td>
-                    <td><input type="text" class="cell-input" id="M4"></td>
-                    <td><input type="text" class="cell-input" id="X4"></td>
-                    <td><input type="text" class="cell-input" id="J4"></td>
-                    <td><input type="text" class="cell-input" id="V4"></td>
-                </tr>
-            </tbody>
-        </table>
-        
-        <p id="status"></p>
-    </div>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>Horario — 202620</title>
 
-    <script type="module">
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
-        import { getFirestore, doc, setDoc, getDoc } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Horario">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="theme-color" content="#1B2A4A">
+<link rel="apple-touch-icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 180 180'%3E%3Crect width='180' height='180' rx='38' fill='%231B2A4A'/%3E%3Crect x='34' y='42' width='112' height='96' rx='8' fill='%23F7F3E8'/%3E%3Crect x='34' y='42' width='112' height='26' rx='8' fill='%23C89B3C'/%3E%3Crect x='34' y='60' width='112' height='8' fill='%23C89B3C'/%3E%3Ccircle cx='60' cy='34' r='7' fill='%23C89B3C'/%3E%3Ccircle cx='120' cy='34' r='7' fill='%23C89B3C'/%3E%3Cline x1='60' y1='24' x2='60' y2='50' stroke='%231B2A4A' stroke-width='6' stroke-linecap='round'/%3E%3Cline x1='120' y1='24' x2='120' y2='50' stroke='%231B2A4A' stroke-width='6' stroke-linecap='round'/%3E%3Crect x='50' y='82' width='20' height='16' rx='2' fill='%232E6E62'/%3E%3Crect x='80' y='82' width='20' height='16' rx='2' fill='%232E6E62' opacity='0.55'/%3E%3Crect x='110' y='82' width='20' height='16' rx='2' fill='%232E6E62' opacity='0.3'/%3E%3Crect x='50' y='106' width='20' height='16' rx='2' fill='%232E6E62' opacity='0.3'/%3E%3Crect x='80' y='106' width='20' height='16' rx='2' fill='%232E6E62'/%3E%3C/svg%3E">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 180 180'%3E%3Crect width='180' height='180' rx='38' fill='%231B2A4A'/%3E%3Crect x='34' y='42' width='112' height='96' rx='8' fill='%23F7F3E8'/%3E%3Crect x='34' y='42' width='112' height='26' rx='8' fill='%23C89B3C'/%3E%3C/svg%3E">
+<link rel="manifest" href="data:application/manifest+json,%7B%22name%22%3A%22Horario%20202620%22%2C%22short_name%22%3A%22Horario%22%2C%22start_url%22%3A%22.%22%2C%22display%22%3A%22standalone%22%2C%22background_color%22%3A%22%23F7F3E8%22%2C%22theme_color%22%3A%22%231B2A4A%22%7D">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,600;0,9..144,700;1,9..144,500&family=Space+Grotesk:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --ink:#1B2A4A;
+    --ink-soft:#3c4a68;
+    --parchment:#F7F3E8;
+    --parchment-dim:#EFE9D8;
+    --card:#FFFDF7;
+    --ochre:#C89B3C;
+    --ochre-deep:#a97e28;
+    --teal:#2E6E62;
+    --line: rgba(27,42,74,0.16);
+    --shadow: 0 1px 0 rgba(27,42,74,0.06);
+  }
+  *{box-sizing:border-box;}
+  html,body{margin:0;padding:0;}
+  body{
+    background:var(--parchment);
+    background-image:
+      radial-gradient(circle at 1px 1px, rgba(27,42,74,0.07) 1px, transparent 0);
+    background-size: 22px 22px;
+    color:var(--ink);
+    font-family:'Space Grotesk', sans-serif;
+    min-height:100vh;
+    padding: 28px 20px 80px;
+  }
+  .wrap{max-width:1180px;margin:0 auto;}
 
-        // ⚠️ IMPORTANTE: Aquí pegas los datos de tu proyecto de Firebase
-        const firebaseConfig = {
-            const firebaseConfig = {
-            apiKey: "AIzaSyD1234567890abcdefghijklmnopqrst",
-            authDomain: "mi-horario-123.firebaseapp.com",
-            projectId: "mi-horario-123",
-            storageBucket: "mi-horario-123.appspot.com",
-            messagingSenderId: "987654321098",
-            appId: "1:987654321098:web:a1b2c3d4e5f6g7h8"
+  /* ---- Pantalla de Inicio ---- */
+  #homeScreen {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: 80vh;
+    text-align: center;
+  }
+  .home-card {
+    background: var(--card);
+    width: 100%;
+    max-width: 440px;
+    border-radius: 8px;
+    border: 2px solid var(--ink);
+    box-shadow: 0 8px 0 rgba(27,42,74,0.18);
+    padding: 30px;
+    margin-top: 30px;
+    text-align: left;
+  }
+  .home-card p {
+    font-size: 15px;
+    line-height: 1.6;
+    color: var(--ink-soft);
+    margin-top: 0;
+    margin-bottom: 24px;
+  }
+  
+  header{
+    display:flex;
+    flex-wrap:wrap;
+    align-items:flex-end;
+    justify-content:space-between;
+    gap:16px;
+    border-bottom: 2px solid var(--ink);
+    padding-bottom:18px;
+    margin-bottom: 26px;
+  }
+  .eyebrow{
+    font-family:'IBM Plex Mono', monospace;
+    font-size:11px;
+    letter-spacing:.14em;
+    text-transform:uppercase;
+    color:var(--teal);
+    font-weight:600;
+    margin-bottom:6px;
+  }
+  h1{
+    font-family:'Fraunces', serif;
+    font-weight:700;
+    font-size: clamp(32px, 5vw, 52px);
+    margin:0;
+    line-height:0.98;
+    letter-spacing:-0.01em;
+  }
+  h1 em{
+    font-style:italic;
+    font-weight:500;
+    color:var(--ochre-deep);
+  }
+  .meta{
+    font-family:'IBM Plex Mono', monospace;
+    font-size:12.5px;
+    color:var(--ink-soft);
+    text-align:right;
+    line-height:1.6;
+  }
+  .meta b{color:var(--ink);}
 
-        };
+  .toolbar{
+    display:flex;
+    gap:10px;
+    flex-wrap:wrap;
+    margin-bottom:22px;
+    align-items: center;
+  }
 
-        // Inicializar Firebase
-        const app = initializeApp(firebaseConfig);
-        const db = getFirestore(app);
+  .tabs{
+    display:flex;
+    gap:0;
+    margin-bottom:18px;
+    border-bottom:1.5px solid var(--ink);
+  }
+  .tab-btn{
+    border:none;
+    background:transparent;
+    font-family:'Space Grotesk', sans-serif;
+    font-weight:600;
+    font-size:13.5px;
+    padding:10px 4px;
+    margin-right:22px;
+    cursor:pointer;
+    color:var(--ink-soft);
+    border-bottom:3px solid transparent;
+    border-radius:0;
+    position:relative;
+    top:1.5px;
+  }
+  .tab-btn:hover{ background:transparent; color:var(--ink); }
+  .tab-btn.on{ color:var(--ink); border-bottom-color:var(--ochre-deep); }
 
-        // Referencias a los elementos del DOM
-        const accessCodeInput = document.getElementById('accessCode');
-        const loadBtn = document.getElementById('loadBtn');
-        const saveBtn = document.getElementById('saveBtn');
-        const statusText = document.getElementById('status');
-        const inputs = document.querySelectorAll('.cell-input');
+  /* ---- Calendar ---- */
+  .cal-toolbar{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    flex-wrap:wrap;
+    gap:10px;
+    margin-bottom:16px;
+  }
+  .cal-nav{ display:flex; align-items:center; gap:8px; }
+  button.sq{ padding:8px 12px; }
+  .cal-title{
+    font-family:'Fraunces', serif;
+    font-size:20px;
+    font-weight:700;
+    min-width:150px;
+    text-align:center;
+    text-transform:capitalize;
+  }
+  .notif-hint{
+    font-family:'IBM Plex Mono', monospace;
+    font-size:11px;
+    color:var(--ink-soft);
+    margin-bottom:10px;
+  }
+  .notif-hint a{ color:var(--teal); cursor:pointer; text-decoration:underline; }
 
-        // Función para guardar
-        async function saveSchedule() {
-            const code = accessCodeInput.value.trim();
-            if (!code) return showStatus("Por favor ingresa un código de acceso.", true);
+  .cal-board{
+    background:var(--card);
+    border:1.5px solid var(--ink);
+    border-radius:4px;
+    box-shadow: 0 3px 0 var(--ink);
+    overflow:hidden;
+  }
+  .cal-weekdays{
+    display:grid;
+    grid-template-columns:repeat(7,1fr);
+    background:var(--parchment-dim);
+    border-bottom:2px solid var(--ink);
+  }
+  .cal-weekdays div{
+    text-align:center;
+    padding:9px 2px;
+    font-family:'IBM Plex Mono', monospace;
+    font-size:10.5px;
+    letter-spacing:.08em;
+    text-transform:uppercase;
+    color:var(--ink-soft);
+    font-weight:600;
+  }
+  .cal-grid{
+    display:grid;
+    grid-template-columns:repeat(7,1fr);
+  }
+  .cal-cell{
+    min-height:64px;
+    border-right:1px solid var(--line);
+    border-top:1px solid var(--line);
+    padding:6px 5px;
+    cursor:pointer;
+    position:relative;
+    transition: background .1s ease;
+  }
+  .cal-cell:nth-child(7n){ border-right:none; }
+  .cal-cell:hover{ background:var(--parchment-dim); }
+  .cal-cell.other-month{ opacity:.35; }
+  .cal-cell.today{ background: rgba(200,155,60,0.14); }
+  .cal-cell .num{
+    font-family:'IBM Plex Mono', monospace;
+    font-size:12px;
+    font-weight:600;
+  }
+  .cal-cell.today .num{
+    display:inline-flex;
+    align-items:center;
+    justify-content:center;
+    width:20px; height:20px;
+    background:var(--ochre-deep);
+    color:#fff;
+    border-radius:50%;
+  }
+  .cal-dots{ display:flex; gap:3px; flex-wrap:wrap; margin-top:5px; }
+  .cal-dot{ width:6px; height:6px; border-radius:50%; }
 
-            showStatus("Guardando en la nube...");
-            const scheduleData = {};
-            inputs.forEach(input => {
-                if(input.value) scheduleData[input.id] = input.value;
-            });
+  .cal-upcoming{ margin-top:22px; }
+  .cal-upcoming h2{
+    font-family:'Fraunces', serif;
+    font-size:18px;
+    font-weight:600;
+    margin:0 0 10px;
+  }
+  .up-item{
+    display:flex;
+    gap:12px;
+    align-items:flex-start;
+    background:var(--card);
+    border:1px solid var(--ink);
+    border-radius:4px;
+    padding:11px 14px;
+    margin-bottom:8px;
+    cursor:pointer;
+  }
+  .up-item:hover{ background:var(--parchment-dim); }
+  .up-item .date{
+    font-family:'IBM Plex Mono', monospace;
+    font-size:11px;
+    color:var(--teal);
+    font-weight:600;
+    white-space:nowrap;
+    padding-top:2px;
+  }
+  .up-item .name{ font-family:'Fraunces', serif; font-weight:600; font-size:14.5px; }
+  .up-item .sub{ font-family:'IBM Plex Mono', monospace; font-size:11px; color:var(--ink-soft); margin-top:2px; }
+  .up-empty{ font-family:'IBM Plex Mono', monospace; font-size:12px; color:var(--ink-soft); font-style:italic; }
 
-            try {
-                await setDoc(doc(db, "horarios", code), scheduleData);
-                showStatus("¡Horario sincronizado correctamente!");
-            } catch (e) {
-                console.error("Error: ", e);
-                showStatus("Error al guardar. Verifica la consola.", true);
-            }
-        }
+  .event-list-item{
+    display:flex;
+    justify-content:space-between;
+    align-items:flex-start;
+    gap:10px;
+    padding:10px 0;
+    border-top:1px solid var(--line);
+  }
+  .event-list-item:first-child{ border-top:none; }
+  .event-list-item .del{
+    border:1px solid var(--line);
+    color:var(--ink-soft);
+    background:none;
+    border-radius:50%;
+    width:26px; height:26px;
+    font-size:14px;
+    padding:0;
+    flex-shrink:0;
+  }
+  .event-list-item .del:hover{ background:#9B3B3B; border-color:#9B3B3B; color:#fff; }
+  button{
+    font-family:'Space Grotesk', sans-serif;
+    font-weight:600;
+    font-size:13.5px;
+    cursor:pointer;
+    border-radius:3px;
+    border:1.5px solid var(--ink);
+    background:transparent;
+    color:var(--ink);
+    padding:9px 16px;
+    transition: all .15s ease;
+  }
+  button:hover{ background:var(--ink); color:var(--parchment); }
+  button.primary{ background:var(--ink); color:var(--parchment); }
+  button.primary:hover{ background:var(--ochre-deep); border-color:var(--ochre-deep); color:#fff; }
+  button.ghost{ border-color:var(--line); color:var(--ink-soft); }
+  button.ghost:hover{ background:var(--ink-soft); color:#fff; border-color:var(--ink-soft); }
+  button.save-btn { background: var(--teal); border-color: var(--teal); color: white; }
+  button.save-btn:hover { background: #22564c; border-color: #22564c; color: white; }
+  button:focus-visible, [tabindex]:focus-visible, select:focus-visible, input:focus-visible{
+    outline: 2px solid var(--teal); outline-offset:2px;
+  }
 
-        // Función para cargar
-        async function loadSchedule() {
-            const code = accessCodeInput.value.trim();
-            if (!code) return showStatus("Por favor ingresa un código de acceso.", true);
+  /* ---- Grid timetable ---- */
+  .board{
+    position:relative;
+    background:var(--card);
+    border:1.5px solid var(--ink);
+    border-radius:4px;
+    overflow:hidden;
+    box-shadow: 0 3px 0 var(--ink);
+  }
+  .grid{
+    display:grid;
+    grid-template-columns: 58px repeat(5, 1fr);
+  }
+  .corner{
+    border-right:1px solid var(--line);
+    border-bottom:2px solid var(--ink);
+    background:var(--parchment-dim);
+  }
+  .daycol-head{
+    font-family:'IBM Plex Mono', monospace;
+    font-size:11px;
+    letter-spacing:.1em;
+    text-transform:uppercase;
+    text-align:center;
+    padding:12px 4px;
+    border-bottom:2px solid var(--ink);
+    border-right:1px solid var(--line);
+    background:var(--parchment-dim);
+    color:var(--ink-soft);
+    font-weight:600;
+  }
+  .daycol-head:last-child{border-right:none;}
+  .daycol-head .full{display:block; font-family:'Fraunces',serif; font-size:15px; font-weight:600; color:var(--ink); text-transform:none; letter-spacing:0; margin-top:2px;}
 
-            showStatus("Buscando tu horario...");
-            try {
-                const docSnap = await getDoc(doc(db, "horarios", code));
-                if (docSnap.exists()) {
-                    const data = docSnap.data();
-                    inputs.forEach(input => {
-                        input.value = data[input.id] || "";
-                    });
-                    showStatus("¡Horario cargado con éxito!");
-                } else {
-                    showStatus("No se encontró ningún horario con ese código. ¡Crea uno nuevo!", true);
-                    inputs.forEach(input => input.value = "");
-                }
-            } catch (e) {
-                console.error("Error: ", e);
-                showStatus("Error al cargar. Verifica la consola.", true);
-            }
-        }
+  .hour-row{
+    grid-column: 1;
+    border-right:1px solid var(--line);
+    border-top:1px solid var(--line);
+    font-family:'IBM Plex Mono', monospace;
+    font-size:10.5px;
+    color: var(--ink-soft);
+    text-align:right;
+    padding:3px 6px 0 0;
+    height:56px;
+  }
+  .cell{
+    border-right:1px solid var(--line);
+    border-top:1px solid var(--line);
+    height:56px;
+    position:relative;
+  }
+  .cell:nth-child(6n){border-right:none;}
 
-        function showStatus(message, isError = false) {
-            statusText.innerText = message;
-            statusText.style.color = isError ? "#e74c3c" : "#27ae60";
-        }
+  .class-block{
+    position:absolute;
+    left:3px; right:3px;
+    border-radius:3px;
+    border:1px solid var(--ink);
+    padding:6px 8px 5px;
+    overflow:hidden;
+    cursor:pointer;
+    transition: transform .1s ease, box-shadow .1s ease;
+    box-shadow: 1px 1px 0 rgba(27,42,74,0.25);
+    z-index:2;
+  }
+  .class-block:hover{ transform: translateY(-1px); box-shadow: 2px 3px 0 rgba(27,42,74,0.35); z-index:5; }
+  .class-block .code{
+    font-family:'IBM Plex Mono', monospace;
+    font-size:9.5px;
+    opacity:.75;
+    letter-spacing:.03em;
+  }
+  .class-block .name{
+    font-family:'Fraunces', serif;
+    font-weight:600;
+    font-size:12.5px;
+    line-height:1.15;
+    margin:1px 0 2px;
+  }
+  .class-block .room{
+    font-family:'IBM Plex Mono', monospace;
+    font-size:10px;
+    opacity:.85;
+  }
 
-        saveBtn.addEventListener('click', saveSchedule);
-        loadBtn.addEventListener('click', loadSchedule);
-    </script>
-</body>
-</html>
+  /* palette rotation for classes */
+  .c0{ background:#E7DAB4; }
+  .c1{ background:#D7E4DE; }
+  .c2{ background:#EAD2C7; }
+  .c3{ background:#DAD9EC; }
+  .c4{ background:#F0DCE4; }
+  .
