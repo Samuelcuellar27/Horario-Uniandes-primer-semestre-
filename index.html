@@ -632,6 +632,7 @@
   <div class="toolbar" id="weeklyToolbar">
     <button class="primary" onclick="openNewClassModal()">+ Agregar clase o sesión</button>
     <button class="save-btn" onclick="manualSave()">💾 Guardar Cambios</button>
+    <button class="ghost" onclick="openImportModal()">📁 Importar Horario (.ics)</button>
     <button class="ghost" onclick="exportScheduleICS()">📅 Exportar a Apple/Google Calendar</button>
     <button class="ghost" onclick="resetAll()">Vaciar / Limpiar horario</button>
     <span id="saveStatus" style="font-family:'IBM Plex Mono',monospace; font-size:12px; color:var(--teal); font-weight:600; align-self:center; margin-left:8px;"></span>
@@ -1292,6 +1293,218 @@ function resetAll(){
   specialSessions = [];
   renderBlocks();
   renderSaturdays();
+}
+
+// FUNCIONALIDAD DE IMPORTACIÓN DE HORARIO (.ICS)
+function openImportModal(){
+  const box = document.getElementById('modalBox');
+  box.innerHTML = `
+    <div class="modal-head">
+      <div>
+        <div class="tag">Importar Horario</div>
+        <h3>Subir o pegar archivo .ics</h3>
+      </div>
+      <div class="close-x" onclick="closeModal()">✕</div>
+    </div>
+    <div class="modal-body">
+      <p style="font-size:13.5px; color:var(--ink-soft); margin-top:0; line-height:1.5;">
+        Puedes importar un archivo de calendario <b>.ics</b> (exportado de Banner, SeAliza, Google Calendar o Apple Calendar) para añadir automáticamente tus clases a la grilla.
+      </p>
+      <div class="field">
+        <label>Seleccionar archivo .ics</label>
+        <input type="file" id="importFile" accept=".ics" style="padding: 6px;">
+      </div>
+      <div style="text-align:center; font-family:'IBM Plex Mono',monospace; font-size:11.5px; color:var(--ink-soft); margin:10px 0;">— o pega el contenido aquí —</div>
+      <div class="field">
+        <label>Contenido del archivo .ics</label>
+        <textarea id="importText" rows="6" placeholder="BEGIN:VCALENDAR&#10;...&#10;END:VCALENDAR" style="width:100%; font-family:'IBM Plex Mono',monospace; font-size:12px; padding:8px; border:1.3px solid var(--line); border-radius:3px;"></textarea>
+      </div>
+      <div class="field">
+        <label><input type="checkbox" id="importAppend" checked> Combinar con las clases existentes (si se desmarca, reemplazará todo el horario)</label>
+      </div>
+    </div>
+    <div class="modal-foot">
+      <button class="ghost" onclick="closeModal()">Cancelar</button>
+      <div class="spacer"></div>
+      <button class="primary" onclick="processImport()">Importar clases</button>
+    </div>
+  `;
+  document.getElementById('overlay').classList.add('open');
+  
+  // Manejar lectura de archivo subido
+  document.getElementById('importFile').addEventListener('change', function(e){
+    const file = e.target.files[0];
+    if(!file) return;
+    const reader = new FileReader();
+    reader.onload = function(evt){
+      document.getElementById('importText').value = evt.target.result;
+    };
+    reader.readAsText(file);
+  });
+}
+
+function processImport(){
+  const text = document.getElementById('importText').value.trim();
+  if(!text){
+    alert('Por favor selecciona un archivo .ics o pega su contenido.');
+    return;
+  }
+  const append = document.getElementById('importAppend').checked;
+  
+  try {
+    const importedClasses = parseICSClasses(text);
+    if(importedClasses.length === 0){
+      alert('No se encontraron eventos de clases válidos en el archivo .ics proporcionado.');
+      return;
+    }
+
+    if(!append){
+      classes = importedClasses;
+    } else {
+      // Evitar duplicados exactos y añadir
+      importedClasses.forEach(imp => {
+        classes.push(imp);
+      });
+    }
+
+    renderBlocks();
+    closeModal();
+    alert(`¡Se importaron ${importedClasses.length} clases exitosamente! No olvides hacer clic en "💾 Guardar Cambios" para sincronizarlas.`);
+  } catch(err){
+    console.error(err);
+    alert('Ocurrió un error al procesar el archivo .ics. Asegúrate de que sea un formato válido.');
+  }
+}
+
+const REVERSE_DAY_CODE = { MO:'Lun', TU:'Mar', WE:'Mié', TH:'Jue', FR:'Vie', SA:'Sáb', SU:'Dom' };
+
+function parseICSClasses(icsText){
+  const events = [];
+  const lines = icsText.split(/\r?\n/);
+  let currentEvent = null;
+
+  lines.forEach(line => {
+    // Manejo de líneas largas continuadas con espacio o tab
+    if((line.startsWith(' ') || line.startsWith('\t')) && currentEvent){
+      // línea continuada (por simplicidad se puede ignorar o concatenar a la última propiedad procesada)
+      return;
+    }
+    
+    if(line === 'BEGIN:VEVENT'){
+      currentEvent = {};
+    } else if(line === 'END:VEVENT' && currentEvent){
+      if(currentEvent.SUMMARY && currentEvent.DTSTART){
+        events.push(currentEvent);
+      }
+      currentEvent = null;
+    } else if(currentEvent){
+      const colonIdx = line.indexOf(':');
+      if(colonIdx !== -1){
+        const keyFull = line.slice(0, colonIdx);
+        const val = line.slice(colonIdx + 1);
+        const key = keyFull.split(';')[0]; // Ignorando parámetros como TZID
+        currentEvent[key] = val;
+      }
+    }
+  });
+
+  const parsedClasses = [];
+  events.forEach((ev, idx) => {
+    const summary = unescapeICS(ev.SUMMARY || 'Clase importada');
+    const description = unescapeICS(ev.DESCRIPTION || '');
+    const location = unescapeICS(ev.LOCATION || '');
+    
+    // Extraer horas de DTSTART y DTEND (ej. 20260803T080000Z o 20260803T080000)
+    const dtStart = ev.DTSTART || '';
+    const dtEnd = ev.DTEND || '';
+    
+    let inicio = '08:00';
+    let fin = '09:20';
+    
+    if(dtStart.includes('T') && dtEnd.includes('T')){
+      const timePartStart = dtStart.split('T')[1];
+      const timePartEnd = dtEnd.split('T')[1];
+      if(timePartStart.length >= 4 && timePartEnd.length >= 4){
+        inicio = timePartStart.slice(0,2) + ':' + timePartStart.slice(2,4);
+        fin = timePartEnd.slice(0,2) + ':' + timePartEnd.slice(2,4);
+      }
+    }
+
+    // Determinar días desde RRULE (ej. FREQ=WEEKLY;BYDAY=MO,WE) o desde la fecha de DTSTART
+    let dias = [];
+    const rrule = ev.RRULE || '';
+    if(rrule.includes('BYDAY=')){
+      const bydayMatch = rrule.match(/BYDAY=([A-Z,]+)/);
+      if(bydayMatch){
+        const codes = bydayMatch[1].split(',');
+        codes.forEach(c => {
+          const mapped = REVERSE_DAY_CODE[c];
+          if(mapped && DAYS.includes(mapped)) dias.push(mapped);
+        });
+      }
+    }
+    
+    if(dias.length === 0 && dtStart.length >= 8){
+      // Si no tiene RRULE, calcular el día de la semana de la fecha inicial
+      const year = parseInt(dtStart.slice(0,4), 10);
+      const month = parseInt(dtStart.slice(4,6), 10) - 1;
+      const dayNum = parseInt(dtStart.slice(6,8), 10);
+      const dObj = new Date(year, month, dayNum);
+      const jsDay = dObj.getDay(); // 0:Dom, 1:Lun...
+      const dayMapNames = ['Dom', 'Lun', 'Mar', 'Mié', 'Jue', 'Vie', 'Sáb'];
+      const dayName = dayMapNames[jsDay];
+      if(DAYS.includes(dayName)) dias.push(dayName);
+    }
+
+    if(dias.length === 0) dias = ['Lun']; // Valor por defecto si no se detectó
+
+    // Extraer NRC o profesor de la descripción si existe
+    let profesor = '';
+    let nrc = '';
+    const descLower = description.toLowerCase();
+    if(descLower.includes('profesor') || descLower.includes('instructor')){
+      const parts = description.split(/[\n·–-]+/);
+      for(let p of parts){
+        if(p.toLowerCase().includes('profesor') || p.toLowerCase().includes('instructor')){
+          profesor = p.replace(/profesor\(a\):?/i, '').replace(/profesor:?/i, '').trim();
+        }
+      }
+    }
+    if(description.includes('NRC')){
+      const nrcMatch = description.match(/NRC\s*([0-9]+)/i);
+      if(nrcMatch) nrc = nrcMatch[1];
+    }
+
+    // Salón y edificio desde LOCATION
+    let salon = location;
+    let edificio = '';
+    if(location.includes('·')){
+      const locParts = location.split('·');
+      edificio = locParts[0].trim();
+      salon = locParts[1].trim();
+    }
+
+    parsedClasses.push({
+      id: 'imp_' + Date.now() + '_' + idx,
+      name: summary,
+      nrc: nrc || '',
+      color: 'c' + (idx % 7),
+      dias: dias,
+      inicio: inicio,
+      fin: fin,
+      profesor: profesor || '',
+      edificio: edificio || '',
+      salon: salon || '',
+      campus: 'Campus Principal',
+      rango: ''
+    });
+  });
+
+  return parsedClasses;
+}
+
+function unescapeICS(str){
+  return (str || '').replace(/\\,/g, ',').replace(/\\;/g, ';').replace(/\\\\/g, '\\').replace(/\\n/g, '\n');
 }
 
 function escAttr(s){ return (s||'').replace(/"/g,'&quot;'); }
