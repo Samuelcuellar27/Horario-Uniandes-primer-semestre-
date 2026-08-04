@@ -1,0 +1,747 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>Horario — 202620</title>
+
+<!-- PWA / Add to Home Screen -->
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Horario">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="theme-color" content="#1B2A4A">
+<link rel="apple-touch-icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 180 180'%3E%3Crect width='180' height='180' rx='38' fill='%231B2A4A'/%3E%3Crect x='34' y='42' width='112' height='96' rx='8' fill='%23F7F3E8'/%3E%3Crect x='34' y='42' width='112' height='26' rx='8' fill='%23C89B3C'/%3E%3Crect x='34' y='60' width='112' height='8' fill='%23C89B3C'/%3E%3Ccircle cx='60' cy='34' r='7' fill='%23C89B3C'/%3E%3Ccircle cx='120' cy='34' r='7' fill='%23C89B3C'/%3E%3Cline x1='60' y1='24' x2='60' y2='50' stroke='%231B2A4A' stroke-width='6' stroke-linecap='round'/%3E%3Cline x1='120' y1='24' x2='120' y2='50' stroke='%231B2A4A' stroke-width='6' stroke-linecap='round'/%3E%3Crect x='50' y='82' width='20' height='16' rx='2' fill='%232E6E62'/%3E%3Crect x='80' y='82' width='20' height='16' rx='2' fill='%232E6E62' opacity='0.55'/%3E%3Crect x='110' y='82' width='20' height='16' rx='2' fill='%232E6E62' opacity='0.3'/%3E%3Crect x='50' y='106' width='20' height='16' rx='2' fill='%232E6E62' opacity='0.3'/%3E%3Crect x='80' y='106' width='20' height='16' rx='2' fill='%232E6E62'/%3E%3C/svg%3E">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 180 180'%3E%3Crect width='180' height='180' rx='38' fill='%231B2A4A'/%3E%3Crect x='34' y='42' width='112' height='96' rx='8' fill='%23F7F3E8'/%3E%3Crect x='34' y='42' width='112' height='26' rx='8' fill='%23C89B3C'/%3E%3C/svg%3E">
+<link rel="manifest" href="data:application/manifest+json,%7B%22name%22%3A%22Horario%20202620%22%2C%22short_name%22%3A%22Horario%22%2C%22start_url%22%3A%22.%22%2C%22display%22%3A%22standalone%22%2C%22background_color%22%3A%22%23F7F3E8%22%2C%22theme_color%22%3A%22%231B2A4A%22%7D">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,600;0,9..144,700;1,9..144,500&family=Space+Grotesk:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --ink:#1B2A4A;
+    --ink-soft:#3c4a68;
+    --parchment:#F7F3E8;
+    --parchment-dim:#EFE9D8;
+    --card:#FFFDF7;
+    --ochre:#C89B3C;
+    --ochre-deep:#a97e28;
+    --teal:#2E6E62;
+    --line: rgba(27,42,74,0.16);
+    --shadow: 0 1px 0 rgba(27,42,74,0.06);
+  }
+  *{box-sizing:border-box;}
+  html,body{margin:0;padding:0;}
+  body{
+    background:var(--parchment);
+    background-image:
+      radial-gradient(circle at 1px 1px, rgba(27,42,74,0.07) 1px, transparent 0);
+    background-size: 22px 22px;
+    color:var(--ink);
+    font-family:'Space Grotesk', sans-serif;
+    min-height:100vh;
+    padding: 28px 20px 80px;
+  }
+  .wrap{max-width:1180px;margin:0 auto;}
+
+  header{
+    display:flex;
+    flex-wrap:wrap;
+    align-items:flex-end;
+    justify-content:space-between;
+    gap:16px;
+    border-bottom: 2px solid var(--ink);
+    padding-bottom:18px;
+    margin-bottom: 26px;
+  }
+  .eyebrow{
+    font-family:'IBM Plex Mono', monospace;
+    font-size:11px;
+    letter-spacing:.14em;
+    text-transform:uppercase;
+    color:var(--teal);
+    font-weight:600;
+    margin-bottom:6px;
+  }
+  h1{
+    font-family:'Fraunces', serif;
+    font-weight:700;
+    font-size: clamp(32px, 5vw, 52px);
+    margin:0;
+    line-height:0.98;
+    letter-spacing:-0.01em;
+  }
+  h1 em{
+    font-style:italic;
+    font-weight:500;
+    color:var(--ochre-deep);
+  }
+  .meta{
+    font-family:'IBM Plex Mono', monospace;
+    font-size:12.5px;
+    color:var(--ink-soft);
+    text-align:right;
+    line-height:1.6;
+  }
+  .meta b{color:var(--ink);}
+
+  .toolbar{
+    display:flex;
+    gap:10px;
+    flex-wrap:wrap;
+    margin-bottom:22px;
+  }
+  button{
+    font-family:'Space Grotesk', sans-serif;
+    font-weight:600;
+    font-size:13.5px;
+    cursor:pointer;
+    border-radius:3px;
+    border:1.5px solid var(--ink);
+    background:transparent;
+    color:var(--ink);
+    padding:9px 16px;
+    transition: all .15s ease;
+  }
+  button:hover{ background:var(--ink); color:var(--parchment); }
+  button.primary{ background:var(--ink); color:var(--parchment); }
+  button.primary:hover{ background:var(--ochre-deep); border-color:var(--ochre-deep); color:#fff; }
+  button.ghost{ border-color:var(--line); color:var(--ink-soft); }
+  button.ghost:hover{ background:var(--ink-soft); color:#fff; border-color:var(--ink-soft); }
+  button:focus-visible, [tabindex]:focus-visible, select:focus-visible, input:focus-visible{
+    outline: 2px solid var(--teal); outline-offset:2px;
+  }
+
+  /* ---- Grid timetable ---- */
+  .board{
+    position:relative;
+    background:var(--card);
+    border:1.5px solid var(--ink);
+    border-radius:4px;
+    overflow:hidden;
+    box-shadow: 0 3px 0 var(--ink);
+  }
+  .grid{
+    display:grid;
+    grid-template-columns: 58px repeat(5, 1fr);
+  }
+  .corner{
+    border-right:1px solid var(--line);
+    border-bottom:2px solid var(--ink);
+    background:var(--parchment-dim);
+  }
+  .daycol-head{
+    font-family:'IBM Plex Mono', monospace;
+    font-size:11px;
+    letter-spacing:.1em;
+    text-transform:uppercase;
+    text-align:center;
+    padding:12px 4px;
+    border-bottom:2px solid var(--ink);
+    border-right:1px solid var(--line);
+    background:var(--parchment-dim);
+    color:var(--ink-soft);
+    font-weight:600;
+  }
+  .daycol-head:last-child{border-right:none;}
+  .daycol-head .full{display:block; font-family:'Fraunces',serif; font-size:15px; font-weight:600; color:var(--ink); text-transform:none; letter-spacing:0; margin-top:2px;}
+
+  .hour-row{
+    grid-column: 1;
+    border-right:1px solid var(--line);
+    border-top:1px solid var(--line);
+    font-family:'IBM Plex Mono', monospace;
+    font-size:10.5px;
+    color: var(--ink-soft);
+    text-align:right;
+    padding:3px 6px 0 0;
+    height:56px;
+  }
+  .cell{
+    border-right:1px solid var(--line);
+    border-top:1px solid var(--line);
+    height:56px;
+    position:relative;
+  }
+  .cell:nth-child(6n){border-right:none;}
+
+  .class-block{
+    position:absolute;
+    left:3px; right:3px;
+    border-radius:3px;
+    border:1px solid var(--ink);
+    padding:6px 8px 5px;
+    overflow:hidden;
+    cursor:pointer;
+    transition: transform .1s ease, box-shadow .1s ease;
+    box-shadow: 1px 1px 0 rgba(27,42,74,0.25);
+    z-index:2;
+  }
+  .class-block:hover{ transform: translateY(-1px); box-shadow: 2px 3px 0 rgba(27,42,74,0.35); z-index:5; }
+  .class-block .code{
+    font-family:'IBM Plex Mono', monospace;
+    font-size:9.5px;
+    opacity:.75;
+    letter-spacing:.03em;
+  }
+  .class-block .name{
+    font-family:'Fraunces', serif;
+    font-weight:600;
+    font-size:12.5px;
+    line-height:1.15;
+    margin:1px 0 2px;
+  }
+  .class-block .room{
+    font-family:'IBM Plex Mono', monospace;
+    font-size:10px;
+    opacity:.85;
+  }
+
+  /* palette rotation for classes */
+  .c0{ background:#E7DAB4; }
+  .c1{ background:#D7E4DE; }
+  .c2{ background:#EAD2C7; }
+  .c3{ background:#DAD9EC; }
+  .c4{ background:#F0DCE4; }
+  .c5{ background:#D6E6ED; }
+  .c6{ background:#E2E7C8; }
+
+  /* Saturday sessions strip */
+  .saturday{
+    margin-top:22px;
+    background:var(--card);
+    border:1.5px solid var(--ink);
+    border-radius:4px;
+    padding:16px 20px;
+    box-shadow: 0 3px 0 var(--ink);
+  }
+  .saturday h2{
+    font-family:'Fraunces', serif;
+    font-size:18px;
+    margin:0 0 4px;
+    font-weight:600;
+  }
+  .saturday p.sub{
+    font-family:'IBM Plex Mono', monospace;
+    font-size:11.5px;
+    color:var(--ink-soft);
+    margin:0 0 12px;
+  }
+  .sat-sessions{ display:flex; flex-wrap:wrap; gap:10px; }
+  .sat-chip{
+    border:1px solid var(--ink);
+    background:var(--parchment-dim);
+    border-radius:3px;
+    padding:8px 12px;
+    font-family:'IBM Plex Mono', monospace;
+    font-size:11.5px;
+    cursor:pointer;
+    line-height:1.5;
+  }
+  .sat-chip:hover{ background:var(--ochre); border-color:var(--ochre-deep); }
+  .sat-chip b{ display:block; font-family:'Space Grotesk',sans-serif; font-size:13px; font-weight:600;}
+
+  footer{
+    text-align:center;
+    font-family:'IBM Plex Mono', monospace;
+    font-size:11px;
+    color:var(--ink-soft);
+    margin-top:34px;
+    opacity:.7;
+  }
+
+  /* ---- Modal ---- */
+  .overlay{
+    position:fixed; inset:0;
+    background:rgba(27,42,74,0.45);
+    backdrop-filter: blur(2px);
+    display:none;
+    align-items:center;
+    justify-content:center;
+    z-index:50;
+    padding:20px;
+  }
+  .overlay.open{ display:flex; }
+  .modal{
+    background:var(--card);
+    width:100%; max-width:460px;
+    border-radius:5px;
+    border:1.5px solid var(--ink);
+    box-shadow: 0 8px 0 rgba(27,42,74,0.18), 0 12px 30px rgba(0,0,0,0.25);
+    max-height:88vh;
+    overflow-y:auto;
+  }
+  .modal-head{
+    padding:20px 22px 14px;
+    border-bottom:1px solid var(--line);
+    display:flex; justify-content:space-between; align-items:flex-start; gap:10px;
+  }
+  .modal-head .tag{
+    font-family:'IBM Plex Mono', monospace;
+    font-size:10.5px;
+    letter-spacing:.08em;
+    text-transform:uppercase;
+    color:var(--teal);
+    font-weight:600;
+  }
+  .modal-head h3{
+    font-family:'Fraunces', serif;
+    font-size:23px;
+    font-weight:700;
+    margin:4px 0 0;
+    line-height:1.1;
+  }
+  .close-x{
+    border:1px solid var(--line);
+    border-radius:50%;
+    width:30px; height:30px;
+    display:flex; align-items:center; justify-content:center;
+    cursor:pointer;
+    font-size:16px;
+    color:var(--ink-soft);
+    flex-shrink:0;
+    background:transparent;
+  }
+  .close-x:hover{ background:var(--ink); color:#fff; border-color:var(--ink); }
+
+  .modal-body{ padding:16px 22px 6px; }
+  .field{ margin-bottom:14px; }
+  .field label{
+    display:block;
+    font-family:'IBM Plex Mono', monospace;
+    font-size:10.5px;
+    letter-spacing:.07em;
+    text-transform:uppercase;
+    color:var(--ink-soft);
+    margin-bottom:5px;
+  }
+  .field .view{
+    font-size:15px;
+    font-weight:500;
+  }
+  .field input, .field select{
+    width:100%;
+    font-family:'Space Grotesk', sans-serif;
+    font-size:14.5px;
+    padding:8px 10px;
+    border:1.3px solid var(--line);
+    border-radius:3px;
+    background:#fff;
+    color:var(--ink);
+  }
+  .field input:focus, .field select:focus{ border-color:var(--teal); }
+  .row2{ display:grid; grid-template-columns:1fr 1fr; gap:12px; }
+  .daypicker{ display:flex; gap:6px; flex-wrap:wrap; }
+  .daypicker button{
+    padding:6px 10px;
+    font-size:12px;
+    border-radius:20px;
+  }
+  .daypicker button.on{ background:var(--ink); color:var(--parchment); }
+
+  .modal-foot{
+    padding:14px 22px 22px;
+    display:flex;
+    gap:10px;
+    flex-wrap:wrap;
+    border-top:1px solid var(--line);
+    margin-top:8px;
+  }
+  .modal-foot .spacer{ flex:1; }
+  .danger{ border-color:#9B3B3B; color:#9B3B3B; }
+  .danger:hover{ background:#9B3B3B; color:#fff; }
+
+  @media (max-width: 720px){
+    .grid{ grid-template-columns: 42px repeat(5, minmax(90px,1fr)); overflow-x:auto; }
+    .board{ overflow-x:auto; }
+    .daycol-head .full{ font-size:12px; }
+    .class-block .name{ font-size:11px; }
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header>
+    <div>
+      <div class="eyebrow">Universidad de los Andes · Periodo 202620</div>
+      <h1>Tu <em>horario</em></h1>
+    </div>
+    <div class="meta">03‑Ago‑2026 → 28‑Nov‑2026<br><b>Toca una clase</b> para ver el detalle o editarla</div>
+  </header>
+
+  <div class="toolbar">
+    <button class="primary" onclick="openNewClassModal()">+ Agregar clase</button>
+    <button class="ghost" onclick="resetAll()">Restaurar horario original</button>
+    <span id="saveStatus" style="font-family:'IBM Plex Mono',monospace; font-size:11px; color:var(--teal); align-self:center; margin-left:4px;"></span>
+  </div>
+
+  <div id="installHint" style="display:none; font-family:'IBM Plex Mono',monospace; font-size:11.5px; color:var(--ink-soft); background:var(--parchment-dim); border:1px dashed var(--line); border-radius:4px; padding:10px 14px; margin-bottom:18px;">
+    📲 Para usarla como app: toca <b>Compartir</b> en Safari → <b>Agregar a pantalla de inicio</b>.
+  </div>
+
+  <div class="board">
+    <div class="grid" id="grid"></div>
+  </div>
+
+  <div class="saturday">
+    <h2>Sesiones especiales — Capacitación para Estudiantes</h2>
+    <p class="sub">NRC 42740 · no ocurren en un horario semanal fijo</p>
+    <div class="sat-sessions" id="satSessions"></div>
+  </div>
+
+  <footer>Instrumentos 1 (03‑Ago–26‑Sep) cambia a Instrumentos 2 (05‑Oct–28‑Nov) — mismo bloque horario, distinto salón e instructor.</footer>
+</div>
+
+<!-- Modal -->
+<div class="overlay" id="overlay">
+  <div class="modal" id="modalBox"></div>
+</div>
+
+<script>
+const DAYS = ['Lun','Mar','Mié','Jue','Vie'];
+const DAY_FULL = {Lun:'Lunes', Mar:'Martes', Mié:'Miércoles', Jue:'Jueves', Vie:'Viernes'};
+const START_HOUR = 6.5; // 06:30
+const END_HOUR = 15;    // 15:00
+const PX_PER_HOUR = 56;
+
+// ---- initial data (from the screenshots) ----
+const ORIGINAL = [
+  {
+    id:'tierra', name:'Ciencias de la Tierra', nrc:'14989', profesor:'Pardo Villaveces, Natalia',
+    dias:['Mar','Jue'], inicio:'08:00', fin:'09:20',
+    edificio:'Centro del Japón (CJ)', salon:'CJ_001', campus:'Campus Principal',
+    rango:'03-Ago-2026 – 28-Nov-2026', color:'c0'
+  },
+  {
+    id:'instrumentos', name:'Instrumentos', nrc:'52133 / 81440', profesor:'Rodríguez Vargas, David → Montero Jiménez, Arturo',
+    dias:['Mié','Vie'], inicio:'11:00', fin:'12:50',
+    edificio:'Bloque C', salon:'C_409B → C_409A', campus:'Campus Principal',
+    rango:'Ciclo 1: 03-Ago–26-Sep (C_409B, Rodríguez Vargas) · Ciclo 2: 05-Oct–28-Nov (C_409A, Montero Jiménez)', color:'c1'
+  },
+  {
+    id:'principios', name:'Principios Arquitectónicos', nrc:'52124', profesor:'Vallejo Cuartas, María',
+    dias:['Mié','Vie'], inicio:'07:00', fin:'09:50',
+    edificio:'Bloque C', salon:'C_410', campus:'Campus Principal',
+    rango:'03-Ago-2026 – 28-Nov-2026', color:'c2'
+  },
+  {
+    id:'pensar', name:'Pensar, Comunicar y…', nrc:'84002', profesor:'Guerrero Torres, Natalia',
+    dias:['Mar','Jue'], inicio:'06:30', fin:'07:50',
+    edificio:'Jue: Edif. Aulas (AU_306) · Mar: Edif. Alberto Lleras (LL_203)', salon:'AU_306 / LL_203', campus:'Campus Principal',
+    rango:'03-Ago-2026 – 28-Nov-2026', color:'c3'
+  },
+  {
+    id:'entrenamiento', name:'Entrenamiento de la…', nrc:'75177', profesor:'Carmona Zamora, Mario',
+    dias:['Mié'], inicio:'14:00', fin:'14:50',
+    edificio:'Edif. Gata Golosa (GA)', salon:'GA_201', campus:'Campus Principal',
+    rango:'03-Ago-2026 – 28-Nov-2026', color:'c4'
+  }
+];
+
+const SATURDAYS = [
+  { titulo:'Sesión presencial', fecha:'Sábado 15-Ago-2026', hora:'08:00 – 13:50', lugar:'Edif. Corcas, Salón CC_102 (Campus Principal)', profesores:'Giraldo Rozo, Juan · Carrero Siábato, Natalia' },
+  { titulo:'Sesión virtual', fecha:'Sábado 05-Sep-2026', hora:'11:00 – 12:50', lugar:'Virtual', profesores:'Giraldo Rozo, Juan · Carrero Siábato, Natalia' },
+  { titulo:'Sesión virtual', fecha:'Sábado 12-Sep-2026', hora:'11:00 – 12:50', lugar:'Virtual', profesores:'Giraldo Rozo, Juan · Carrero Siábato, Natalia' },
+];
+
+const STORAGE_KEY = 'horario-202620-clases';
+let classes = JSON.parse(JSON.stringify(ORIGINAL));
+let editingId = null;
+let colorCursor = classes.length;
+
+async function loadClasses(){
+  try{
+    const result = await window.storage.get(STORAGE_KEY, false);
+    if(result && result.value){
+      classes = JSON.parse(result.value);
+    }
+  }catch(err){
+    // no hay datos guardados todavía — se queda con ORIGINAL
+    console.log('Sin horario guardado previamente, usando el original.');
+  }
+  renderBlocks();
+}
+
+async function persistClasses(){
+  const status = document.getElementById('saveStatus');
+  try{
+    const result = await window.storage.set(STORAGE_KEY, JSON.stringify(classes), false);
+    if(result && status){
+      status.textContent = '✓ guardado';
+      setTimeout(()=>{ if(status) status.textContent=''; }, 1800);
+    }
+  }catch(err){
+    if(status) status.textContent = '⚠ no se pudo guardar';
+    console.error('Storage error:', err);
+  }
+}
+
+function timeToY(t){
+  const [h,m] = t.split(':').map(Number);
+  return ((h + m/60) - START_HOUR) * PX_PER_HOUR;
+}
+
+function buildGrid(){
+  const grid = document.getElementById('grid');
+  grid.innerHTML = '';
+
+  // corner
+  const corner = document.createElement('div');
+  corner.className = 'corner';
+  grid.appendChild(corner);
+
+  // day headers
+  DAYS.forEach(d=>{
+    const h = document.createElement('div');
+    h.className = 'daycol-head';
+    h.innerHTML = d + '<span class="full">'+DAY_FULL[d]+'</span>';
+    grid.appendChild(h);
+  });
+
+  const totalHours = END_HOUR - START_HOUR;
+  const rowsCount = Math.ceil(totalHours);
+
+  for(let i=0;i<rowsCount;i++){
+    const hourLabel = document.createElement('div');
+    hourLabel.className='hour-row';
+    const hh = Math.floor(START_HOUR + i);
+    hourLabel.textContent = (hh<10?'0':'')+hh+':00';
+    grid.appendChild(hourLabel);
+
+    for(let d=0; d<5; d++){
+      const cell = document.createElement('div');
+      cell.className='cell';
+      grid.appendChild(cell);
+    }
+  }
+
+  // overlay class blocks positioned absolutely within grid using extra wrapper
+  // simplest: append blocks as children of grid with absolute positioning relative to grid,
+  // computing left offset by column index.
+  grid.style.position='relative';
+  const colWidthPercent = (100-  (58/ (grid.offsetWidth||1180) *100)) /5; // fallback, recompute on resize
+  renderBlocks();
+}
+
+function renderBlocks(){
+  document.querySelectorAll('.class-block').forEach(el=>el.remove());
+  const grid = document.getElementById('grid');
+  const gridRect = grid.getBoundingClientRect();
+  const hourColWidth = 58;
+  const dayColWidth = (gridRect.width - hourColWidth) / 5;
+  const headerHeight = document.querySelector('.daycol-head').getBoundingClientRect().height;
+
+  classes.forEach(cls=>{
+    cls.dias.forEach(day=>{
+      const dayIndex = DAYS.indexOf(day);
+      if(dayIndex === -1) return;
+      const top = headerHeight + timeToY(cls.inicio);
+      const height = Math.max(timeToY(cls.fin) - timeToY(cls.inicio), 30);
+      const block = document.createElement('div');
+      block.className = 'class-block ' + cls.color;
+      block.style.top = top+'px';
+      block.style.height = height+'px';
+      block.style.left = (hourColWidth + dayIndex*dayColWidth + 3)+'px';
+      block.style.width = (dayColWidth - 6)+'px';
+      block.innerHTML = `<div class="code">${cls.inicio}–${cls.fin}</div><div class="name">${cls.name}</div><div class="room">${cls.salon}</div>`;
+      block.onclick = ()=> openDetail(cls.id);
+      grid.appendChild(block);
+    });
+  });
+}
+
+window.addEventListener('resize', renderBlocks);
+
+function renderSaturdays(){
+  const wrap = document.getElementById('satSessions');
+  wrap.innerHTML = '';
+  SATURDAYS.forEach(s=>{
+    const chip = document.createElement('div');
+    chip.className='sat-chip';
+    chip.innerHTML = `<b>${s.fecha}</b>${s.hora} · ${s.titulo}<br>${s.lugar}`;
+    chip.onclick = ()=> alert(`${s.titulo}\n${s.fecha}\nHora: ${s.hora}\nLugar: ${s.lugar}\nInstructores: ${s.profesores}`);
+    wrap.appendChild(chip);
+  });
+}
+
+// ---------- Modal: detail / edit ----------
+function openDetail(id){
+  editingId = id;
+  const cls = classes.find(c=>c.id===id);
+  renderModal(cls, false);
+  document.getElementById('overlay').classList.add('open');
+}
+
+function openNewClassModal(){
+  editingId = null;
+  const blank = {
+    id: 'c'+Date.now(), name:'', nrc:'', profesor:'',
+    dias:[], inicio:'08:00', fin:'09:20',
+    edificio:'', salon:'', campus:'Campus Principal', rango:'', color: 'c'+(colorCursor++ % 7)
+  };
+  renderModal(blank, true);
+  document.getElementById('overlay').classList.add('open');
+}
+
+function renderModal(cls, forceEdit){
+  const box = document.getElementById('modalBox');
+  const isNew = !classes.find(c=>c.id===cls.id);
+  box.innerHTML = `
+    <div class="modal-head">
+      <div>
+        <div class="tag">${isNew ? 'Nueva clase' : 'NRC ' + cls.nrc}</div>
+        <h3>${isNew ? 'Agregar clase' : cls.name}</h3>
+      </div>
+      <div class="close-x" onclick="closeModal()">✕</div>
+    </div>
+    <div class="modal-body" id="modalBody"></div>
+    <div class="modal-foot" id="modalFoot"></div>
+  `;
+  fillView(cls, isNew || forceEdit);
+}
+
+function fillView(cls, editMode){
+  const body = document.getElementById('modalBody');
+  const foot = document.getElementById('modalFoot');
+
+  if(!editMode){
+    body.innerHTML = `
+      <div class="field"><label>Materia</label><div class="view">${cls.name}</div></div>
+      <div class="row2">
+        <div class="field"><label>NRC</label><div class="view">${cls.nrc||'—'}</div></div>
+        <div class="field"><label>Días</label><div class="view">${cls.dias.join(', ')||'—'}</div></div>
+      </div>
+      <div class="row2">
+        <div class="field"><label>Hora inicio</label><div class="view">${cls.inicio}</div></div>
+        <div class="field"><label>Hora fin</label><div class="view">${cls.fin}</div></div>
+      </div>
+      <div class="field"><label>Profesor(a)</label><div class="view">${cls.profesor||'—'}</div></div>
+      <div class="row2">
+        <div class="field"><label>Edificio</label><div class="view">${cls.edificio||'—'}</div></div>
+        <div class="field"><label>Salón</label><div class="view">${cls.salon||'—'}</div></div>
+      </div>
+      <div class="field"><label>Campus</label><div class="view">${cls.campus||'—'}</div></div>
+      <div class="field"><label>Rango de fechas</label><div class="view" style="font-size:13px; line-height:1.5;">${cls.rango||'—'}</div></div>
+    `;
+    foot.innerHTML = `
+      <button class="ghost" onclick="closeModal()">Cerrar</button>
+      <div class="spacer"></div>
+      <button class="danger" onclick="deleteClass('${cls.id}')">Eliminar</button>
+      <button class="primary" onclick="switchToEdit('${cls.id}')">Editar / reemplazar</button>
+    `;
+  } else {
+    body.innerHTML = `
+      <div class="field"><label>Materia</label><input id="f_name" value="${escAttr(cls.name)}" placeholder="Nombre de la materia"></div>
+      <div class="row2">
+        <div class="field"><label>NRC</label><input id="f_nrc" value="${escAttr(cls.nrc)}" placeholder="Ej. 12345"></div>
+        <div class="field"><label>Color</label>
+          <select id="f_color">
+            ${['c0','c1','c2','c3','c4','c5','c6'].map(c=>`<option value="${c}" ${cls.color===c?'selected':''}>${c}</option>`).join('')}
+          </select>
+        </div>
+      </div>
+      <div class="field"><label>Días</label>
+        <div class="daypicker" id="f_dias">
+          ${DAYS.map(d=>`<button type="button" data-day="${d}" class="${cls.dias.includes(d)?'on':''}" onclick="toggleDay(this)">${d}</button>`).join('')}
+        </div>
+      </div>
+      <div class="row2">
+        <div class="field"><label>Hora inicio</label><input id="f_inicio" type="time" value="${cls.inicio}"></div>
+        <div class="field"><label>Hora fin</label><input id="f_fin" type="time" value="${cls.fin}"></div>
+      </div>
+      <div class="field"><label>Profesor(a)</label><input id="f_profesor" value="${escAttr(cls.profesor)}" placeholder="Nombre del profesor"></div>
+      <div class="row2">
+        <div class="field"><label>Edificio</label><input id="f_edificio" value="${escAttr(cls.edificio)}" placeholder="Ej. Bloque C"></div>
+        <div class="field"><label>Salón</label><input id="f_salon" value="${escAttr(cls.salon)}" placeholder="Ej. C_410"></div>
+      </div>
+      <div class="field"><label>Campus</label><input id="f_campus" value="${escAttr(cls.campus)}" placeholder="Campus Principal"></div>
+      <div class="field"><label>Rango de fechas / notas</label><input id="f_rango" value="${escAttr(cls.rango)}" placeholder="03-Ago-2026 – 28-Nov-2026"></div>
+    `;
+    foot.innerHTML = `
+      <button class="ghost" onclick="closeModal()">Cancelar</button>
+      <div class="spacer"></div>
+      <button class="primary" onclick="saveClass('${cls.id}')">Guardar</button>
+    `;
+  }
+}
+
+function toggleDay(btn){ btn.classList.toggle('on'); }
+
+function switchToEdit(id){
+  const cls = classes.find(c=>c.id===id);
+  fillView(cls, true);
+  document.querySelector('.tag').textContent = 'Editando · NRC ' + (cls.nrc||'—');
+}
+
+function saveClass(id){
+  const name = document.getElementById('f_name').value.trim() || 'Materia sin nombre';
+  const nrc = document.getElementById('f_nrc').value.trim();
+  const color = document.getElementById('f_color').value;
+  const dias = Array.from(document.querySelectorAll('#f_dias button.on')).map(b=>b.dataset.day);
+  const inicio = document.getElementById('f_inicio').value || '08:00';
+  const fin = document.getElementById('f_fin').value || '09:00';
+  const profesor = document.getElementById('f_profesor').value.trim();
+  const edificio = document.getElementById('f_edificio').value.trim();
+  const salon = document.getElementById('f_salon').value.trim();
+  const campus = document.getElementById('f_campus').value.trim();
+  const rango = document.getElementById('f_rango').value.trim();
+
+  const existingIndex = classes.findIndex(c=>c.id===id);
+  const newCls = {id, name, nrc, color, dias, inicio, fin, profesor, edificio, salon, campus, rango};
+
+  if(existingIndex >= 0){
+    classes[existingIndex] = newCls;
+  } else {
+    classes.push(newCls);
+  }
+  renderBlocks();
+  closeModal();
+  persistClasses();
+}
+
+function deleteClass(id){
+  if(!confirm('¿Eliminar esta clase del horario?')) return;
+  classes = classes.filter(c=>c.id!==id);
+  renderBlocks();
+  closeModal();
+  persistClasses();
+}
+
+function closeModal(){
+  document.getElementById('overlay').classList.remove('open');
+  editingId = null;
+}
+
+function resetAll(){
+  if(!confirm('Esto restaura el horario a los datos originales de tu registro. ¿Continuar?')) return;
+  classes = JSON.parse(JSON.stringify(ORIGINAL));
+  renderBlocks();
+  persistClasses();
+}
+
+function escAttr(s){
+  return (s||'').replace(/"/g,'&quot;');
+}
+
+document.getElementById('overlay').addEventListener('click', (e)=>{
+  if(e.target.id==='overlay') closeModal();
+});
+document.addEventListener('keydown', (e)=>{
+  if(e.key==='Escape') closeModal();
+});
+
+buildGrid();
+renderSaturdays();
+loadClasses();
+
+// mostrar el aviso de instalación solo en iPhone/Safari y si aún no está instalada
+(function(){
+  const isIOS = /iphone|ipad|ipod/i.test(navigator.userAgent);
+  const isStandalone = window.navigator.standalone === true;
+  if(isIOS && !isStandalone){
+    document.getElementById('installHint').style.display = 'block';
+  }
+})();
+</script>
+</body>
+</html>
