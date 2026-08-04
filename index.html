@@ -90,6 +90,166 @@
     flex-wrap:wrap;
     margin-bottom:22px;
   }
+
+  .tabs{
+    display:flex;
+    gap:0;
+    margin-bottom:18px;
+    border-bottom:1.5px solid var(--ink);
+  }
+  .tab-btn{
+    border:none;
+    background:transparent;
+    font-family:'Space Grotesk', sans-serif;
+    font-weight:600;
+    font-size:13.5px;
+    padding:10px 4px;
+    margin-right:22px;
+    cursor:pointer;
+    color:var(--ink-soft);
+    border-bottom:3px solid transparent;
+    border-radius:0;
+    position:relative;
+    top:1.5px;
+  }
+  .tab-btn:hover{ background:transparent; color:var(--ink); }
+  .tab-btn.on{ color:var(--ink); border-bottom-color:var(--ochre-deep); }
+
+  /* ---- Calendar ---- */
+  .cal-toolbar{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    flex-wrap:wrap;
+    gap:10px;
+    margin-bottom:16px;
+  }
+  .cal-nav{ display:flex; align-items:center; gap:8px; }
+  button.sq{ padding:8px 12px; }
+  .cal-title{
+    font-family:'Fraunces', serif;
+    font-size:20px;
+    font-weight:700;
+    min-width:150px;
+    text-align:center;
+    text-transform:capitalize;
+  }
+  .notif-hint{
+    font-family:'IBM Plex Mono', monospace;
+    font-size:11px;
+    color:var(--ink-soft);
+    margin-bottom:10px;
+  }
+  .notif-hint a{ color:var(--teal); cursor:pointer; text-decoration:underline; }
+
+  .cal-board{
+    background:var(--card);
+    border:1.5px solid var(--ink);
+    border-radius:4px;
+    box-shadow: 0 3px 0 var(--ink);
+    overflow:hidden;
+  }
+  .cal-weekdays{
+    display:grid;
+    grid-template-columns:repeat(7,1fr);
+    background:var(--parchment-dim);
+    border-bottom:2px solid var(--ink);
+  }
+  .cal-weekdays div{
+    text-align:center;
+    padding:9px 2px;
+    font-family:'IBM Plex Mono', monospace;
+    font-size:10.5px;
+    letter-spacing:.08em;
+    text-transform:uppercase;
+    color:var(--ink-soft);
+    font-weight:600;
+  }
+  .cal-grid{
+    display:grid;
+    grid-template-columns:repeat(7,1fr);
+  }
+  .cal-cell{
+    min-height:64px;
+    border-right:1px solid var(--line);
+    border-top:1px solid var(--line);
+    padding:6px 5px;
+    cursor:pointer;
+    position:relative;
+    transition: background .1s ease;
+  }
+  .cal-cell:nth-child(7n){ border-right:none; }
+  .cal-cell:hover{ background:var(--parchment-dim); }
+  .cal-cell.other-month{ opacity:.35; }
+  .cal-cell.today{ background: rgba(200,155,60,0.14); }
+  .cal-cell .num{
+    font-family:'IBM Plex Mono', monospace;
+    font-size:12px;
+    font-weight:600;
+  }
+  .cal-cell.today .num{
+    display:inline-flex;
+    align-items:center;
+    justify-content:center;
+    width:20px; height:20px;
+    background:var(--ochre-deep);
+    color:#fff;
+    border-radius:50%;
+  }
+  .cal-dots{ display:flex; gap:3px; flex-wrap:wrap; margin-top:5px; }
+  .cal-dot{ width:6px; height:6px; border-radius:50%; }
+
+  .cal-upcoming{ margin-top:22px; }
+  .cal-upcoming h2{
+    font-family:'Fraunces', serif;
+    font-size:18px;
+    font-weight:600;
+    margin:0 0 10px;
+  }
+  .up-item{
+    display:flex;
+    gap:12px;
+    align-items:flex-start;
+    background:var(--card);
+    border:1px solid var(--ink);
+    border-radius:4px;
+    padding:11px 14px;
+    margin-bottom:8px;
+    cursor:pointer;
+  }
+  .up-item:hover{ background:var(--parchment-dim); }
+  .up-item .date{
+    font-family:'IBM Plex Mono', monospace;
+    font-size:11px;
+    color:var(--teal);
+    font-weight:600;
+    white-space:nowrap;
+    padding-top:2px;
+  }
+  .up-item .name{ font-family:'Fraunces', serif; font-weight:600; font-size:14.5px; }
+  .up-item .sub{ font-family:'IBM Plex Mono', monospace; font-size:11px; color:var(--ink-soft); margin-top:2px; }
+  .up-empty{ font-family:'IBM Plex Mono', monospace; font-size:12px; color:var(--ink-soft); font-style:italic; }
+
+  .event-list-item{
+    display:flex;
+    justify-content:space-between;
+    align-items:flex-start;
+    gap:10px;
+    padding:10px 0;
+    border-top:1px solid var(--line);
+  }
+  .event-list-item:first-child{ border-top:none; }
+  .event-list-item .del{
+    border:1px solid var(--line);
+    color:var(--ink-soft);
+    background:none;
+    border-radius:50%;
+    width:26px; height:26px;
+    font-size:14px;
+    padding:0;
+    flex-shrink:0;
+  }
+  .event-list-item .del:hover{ background:#9B3B3B; border-color:#9B3B3B; color:#fff; }
   button{
     font-family:'Space Grotesk', sans-serif;
     font-weight:600;
@@ -449,7 +609,12 @@
     <div class="meta">03‑Ago‑2026 → 28‑Nov‑2026<br><b>Toca una clase</b> para ver el detalle o editarla</div>
   </header>
 
-  <div class="toolbar">
+  <div class="tabs">
+    <button class="tab-btn on" id="tabWeekly" onclick="switchView('weekly')">Horario semanal</button>
+    <button class="tab-btn" id="tabCalendar" onclick="switchView('calendar')">Calendario · eventos</button>
+  </div>
+
+  <div class="toolbar" id="weeklyToolbar">
     <button class="primary" onclick="openNewClassModal()">+ Agregar clase</button>
     <button class="ghost" onclick="resetAll()">Restaurar horario original</button>
     <span id="saveStatus" style="font-family:'IBM Plex Mono',monospace; font-size:11px; color:var(--teal); align-self:center; margin-left:4px;"></span>
@@ -459,19 +624,45 @@
     📲 Para usarla como app: toca <b>Compartir</b> en Safari → <b>Agregar a pantalla de inicio</b>.
   </div>
 
-  <div class="board">
-    <div class="grid" id="grid"></div>
+  <div id="weeklyView">
+    <div class="board">
+      <div class="grid" id="grid"></div>
+    </div>
+
+    <div class="agenda" id="agenda"></div>
+
+    <div class="saturday">
+      <h2>Sesiones especiales — Capacitación para Estudiantes</h2>
+      <p class="sub">NRC 42740 · no ocurren en un horario semanal fijo</p>
+      <div class="sat-sessions" id="satSessions"></div>
+    </div>
+
+    <footer>Instrumentos 1 (03‑Ago–26‑Sep) cambia a Instrumentos 2 (05‑Oct–28‑Nov) — mismo bloque horario, distinto salón e instructor.</footer>
   </div>
 
-  <div class="agenda" id="agenda"></div>
-
-  <div class="saturday">
-    <h2>Sesiones especiales — Capacitación para Estudiantes</h2>
-    <p class="sub">NRC 42740 · no ocurren en un horario semanal fijo</p>
-    <div class="sat-sessions" id="satSessions"></div>
+  <div id="calendarView" style="display:none;">
+    <div class="cal-toolbar">
+      <div class="cal-nav">
+        <button class="ghost sq" onclick="calShiftMonth(-1)">‹</button>
+        <div class="cal-title" id="calTitle"></div>
+        <button class="ghost sq" onclick="calShiftMonth(1)">›</button>
+      </div>
+      <div class="cal-nav">
+        <button class="ghost sq" onclick="calShiftYear(-1)" title="Año anterior">«</button>
+        <button class="ghost" onclick="calGoToday()">Hoy</button>
+        <button class="ghost sq" onclick="calShiftYear(1)" title="Año siguiente">»</button>
+      </div>
+    </div>
+    <div class="notif-hint" id="notifHint"></div>
+    <div class="cal-board">
+      <div class="cal-weekdays" id="calWeekdays"></div>
+      <div class="cal-grid" id="calGrid"></div>
+    </div>
+    <div class="cal-upcoming">
+      <h2>Próximos eventos</h2>
+      <div id="upcomingList"></div>
+    </div>
   </div>
-
-  <footer>Instrumentos 1 (03‑Ago–26‑Sep) cambia a Instrumentos 2 (05‑Oct–28‑Nov) — mismo bloque horario, distinto salón e instructor.</footer>
 </div>
 
 <!-- Modal -->
@@ -872,6 +1063,321 @@ loadClasses();
     document.getElementById('installHint').style.display = 'block';
   }
 })();
+
+// ==================================================
+// Vista: pestañas (horario semanal / calendario)
+// ==================================================
+function switchView(view){
+  const weekly = document.getElementById('weeklyView');
+  const cal = document.getElementById('calendarView');
+  const weeklyToolbar = document.getElementById('weeklyToolbar');
+  document.getElementById('tabWeekly').classList.toggle('on', view==='weekly');
+  document.getElementById('tabCalendar').classList.toggle('on', view==='calendar');
+  if(view==='weekly'){
+    weekly.style.display='';
+    weeklyToolbar.style.display='';
+    cal.style.display='none';
+  } else {
+    weekly.style.display='none';
+    weeklyToolbar.style.display='none';
+    cal.style.display='';
+    renderCalendar();
+    renderUpcoming();
+  }
+}
+
+// ==================================================
+// Calendario de eventos (cualquier mes / año)
+// ==================================================
+const EVENTS_KEY = 'horario-eventos-todos';
+const WEEKDAYS_SHORT = ['Dom','Lun','Mar','Mié','Jue','Vie','Sáb'];
+const MONTH_NAMES = ['Enero','Febrero','Marzo','Abril','Mayo','Junio','Julio','Agosto','Septiembre','Octubre','Noviembre','Diciembre'];
+
+let events = {}; // { 'YYYY-MM-DD': [ {id,title,time,notes,reminderMinutes,fired} ] }
+const today = new Date();
+let calYear = today.getFullYear();
+let calMonth = today.getMonth(); // 0-indexed
+
+async function loadEvents(){
+  try{
+    const result = await window.storage.get(EVENTS_KEY, false);
+    if(result && result.value){
+      events = JSON.parse(result.value);
+    }
+  }catch(err){
+    console.log('Sin eventos guardados todavía.');
+  }
+}
+
+async function persistEvents(){
+  try{
+    await window.storage.set(EVENTS_KEY, JSON.stringify(events), false);
+  }catch(err){
+    console.error('No se pudieron guardar los eventos:', err);
+  }
+}
+
+function pad2(n){ return n<10 ? '0'+n : ''+n; }
+function dateKey(y,m,d){ return `${y}-${pad2(m+1)}-${pad2(d)}`; }
+
+function calShiftMonth(delta){
+  calMonth += delta;
+  if(calMonth > 11){ calMonth=0; calYear++; }
+  if(calMonth < 0){ calMonth=11; calYear--; }
+  renderCalendar();
+}
+function calShiftYear(delta){
+  calYear += delta;
+  renderCalendar();
+}
+function calGoToday(){
+  calYear = today.getFullYear();
+  calMonth = today.getMonth();
+  renderCalendar();
+}
+
+function renderCalendar(){
+  document.getElementById('calTitle').textContent = `${MONTH_NAMES[calMonth]} ${calYear}`;
+
+  const wd = document.getElementById('calWeekdays');
+  wd.innerHTML = WEEKDAYS_SHORT.map(d=>`<div>${d}</div>`).join('');
+
+  const grid = document.getElementById('calGrid');
+  grid.innerHTML = '';
+
+  const firstOfMonth = new Date(calYear, calMonth, 1);
+  const startOffset = firstOfMonth.getDay(); // 0=Dom
+  const daysInMonth = new Date(calYear, calMonth+1, 0).getDate();
+  const daysInPrevMonth = new Date(calYear, calMonth, 0).getDate();
+
+  const totalCells = Math.ceil((startOffset + daysInMonth) / 7) * 7;
+
+  for(let i=0; i<totalCells; i++){
+    const dayNum = i - startOffset + 1;
+    let cellY = calYear, cellM = calMonth, cellD, otherMonth = false;
+
+    if(dayNum < 1){
+      cellD = daysInPrevMonth + dayNum;
+      cellM = calMonth - 1; cellY = calMonth===0 ? calYear-1 : calYear;
+      cellM = (cellM+12)%12;
+      otherMonth = true;
+    } else if(dayNum > daysInMonth){
+      cellD = dayNum - daysInMonth;
+      cellM = (calMonth+1)%12; cellY = calMonth===11 ? calYear+1 : calYear;
+      otherMonth = true;
+    } else {
+      cellD = dayNum;
+    }
+
+    const key = dateKey(cellY, cellM, cellD);
+    const isToday = (cellY===today.getFullYear() && cellM===today.getMonth() && cellD===today.getDate());
+
+    const cell = document.createElement('div');
+    cell.className = 'cal-cell' + (otherMonth?' other-month':'') + (isToday?' today':'');
+    cell.onclick = ()=> openDayModal(key);
+
+    const dayEvents = events[key] || [];
+    const dots = dayEvents.slice(0,4).map(()=>`<span class="cal-dot" style="background:var(--ochre-deep)"></span>`).join('');
+
+    cell.innerHTML = `<div class="num">${cellD}</div><div class="cal-dots">${dots}</div>`;
+    grid.appendChild(cell);
+  }
+}
+
+function renderUpcoming(){
+  const list = document.getElementById('upcomingList');
+  const nowKey = dateKey(today.getFullYear(), today.getMonth(), today.getDate());
+  const flat = [];
+  Object.keys(events).forEach(key=>{
+    if(key >= nowKey){
+      events[key].forEach(ev=> flat.push({...ev, key}));
+    }
+  });
+  flat.sort((a,b)=> (a.key+ (a.time||'99:99')).localeCompare(b.key+(b.time||'99:99')));
+
+  if(flat.length===0){
+    list.innerHTML = `<div class="up-empty">No tienes eventos próximos.</div>`;
+    return;
+  }
+  list.innerHTML = flat.slice(0,15).map(ev=>{
+    const [y,m,d] = ev.key.split('-');
+    const niceDate = `${d}-${MONTH_NAMES[parseInt(m,10)-1].slice(0,3)}-${y}`;
+    return `<div class="up-item" onclick="openDayModal('${ev.key}')">
+      <div class="date">${niceDate}${ev.time ? '<br>'+ev.time : ''}</div>
+      <div>
+        <div class="name">${ev.title}</div>
+        ${ev.notes ? `<div class="sub">${ev.notes}</div>` : ''}
+        ${ev.reminderMinutes ? `<div class="sub">🔔 recordatorio ${ev.reminderMinutes} min antes</div>` : ''}
+      </div>
+    </div>`;
+  }).join('');
+}
+
+// ---- Modal de día: ver / agregar / borrar eventos ----
+function openDayModal(key){
+  const [y,m,d] = key.split('-').map(Number);
+  const niceDate = `${d} de ${MONTH_NAMES[m-1]}, ${y}`;
+  const dayEvents = events[key] || [];
+
+  const box = document.getElementById('modalBox');
+  box.innerHTML = `
+    <div class="modal-head">
+      <div>
+        <div class="tag">Calendario</div>
+        <h3>${niceDate}</h3>
+      </div>
+      <div class="close-x" onclick="closeModal()">✕</div>
+    </div>
+    <div class="modal-body" id="modalBody">
+      <div id="dayEventsList"></div>
+      <div style="margin-top:16px; border-top:1px solid var(--line); padding-top:16px;">
+        <div class="field"><label>Título del evento</label><input id="ev_title" placeholder="Ej. Entrega de taller"></div>
+        <div class="row2">
+          <div class="field"><label>Fecha</label><input id="ev_date" type="date" value="${key}"></div>
+          <div class="field"><label>Hora (opcional)</label><input id="ev_time" type="time"></div>
+        </div>
+        <div class="field"><label>Notas (opcional)</label><input id="ev_notes" placeholder="Detalles, lugar, etc."></div>
+        <div class="field">
+          <label>Recordatorio</label>
+          <select id="ev_reminder">
+            <option value="">Sin recordatorio</option>
+            <option value="10">10 minutos antes</option>
+            <option value="30">30 minutos antes</option>
+            <option value="60">1 hora antes</option>
+            <option value="1440">1 día antes</option>
+          </select>
+        </div>
+      </div>
+    </div>
+    <div class="modal-foot">
+      <button class="ghost" onclick="closeModal()">Cerrar</button>
+      <div class="spacer"></div>
+      <button class="primary" onclick="addEvent('${key}')">+ Agregar evento</button>
+    </div>
+  `;
+  renderDayEventsList(key);
+  document.getElementById('overlay').classList.add('open');
+}
+
+function renderDayEventsList(key){
+  const wrap = document.getElementById('dayEventsList');
+  const dayEvents = events[key] || [];
+  if(dayEvents.length===0){
+    wrap.innerHTML = `<div class="agenda-empty" style="padding:0 0 4px;">Sin eventos este día todavía.</div>`;
+    return;
+  }
+  wrap.innerHTML = dayEvents.map(ev=>`
+    <div class="event-list-item">
+      <div>
+        <div class="name" style="font-family:'Fraunces',serif; font-weight:600; font-size:14.5px;">${ev.time ? ev.time+' · ' : ''}${ev.title}</div>
+        ${ev.notes ? `<div class="sub" style="font-family:'IBM Plex Mono',monospace; font-size:11px; color:var(--ink-soft); margin-top:2px;">${ev.notes}</div>` : ''}
+        ${ev.reminderMinutes ? `<div class="sub" style="font-family:'IBM Plex Mono',monospace; font-size:11px; color:var(--teal); margin-top:2px;">🔔 ${ev.reminderMinutes} min antes</div>` : ''}
+      </div>
+      <button class="del" onclick="deleteEvent('${key}','${ev.id}')">✕</button>
+    </div>
+  `).join('');
+}
+
+async function addEvent(originalKey){
+  const title = document.getElementById('ev_title').value.trim();
+  if(!title){ alert('Ponle un título al evento.'); return; }
+  const date = document.getElementById('ev_date').value || originalKey;
+  const time = document.getElementById('ev_time').value;
+  const notes = document.getElementById('ev_notes').value.trim();
+  const reminderMinutes = document.getElementById('ev_reminder').value;
+
+  if(reminderMinutes){
+    await ensureNotificationPermission();
+  }
+
+  const ev = {
+    id: 'e'+Date.now(),
+    title, time, notes,
+    reminderMinutes: reminderMinutes ? parseInt(reminderMinutes,10) : null,
+    fired: false
+  };
+
+  if(!events[date]) events[date] = [];
+  events[date].push(ev);
+  await persistEvents();
+
+  renderCalendar();
+  renderUpcoming();
+  openDayModal(date);
+}
+
+async function deleteEvent(key, id){
+  if(!events[key]) return;
+  events[key] = events[key].filter(e=>e.id!==id);
+  if(events[key].length===0) delete events[key];
+  await persistEvents();
+  renderCalendar();
+  renderUpcoming();
+  renderDayEventsList(key);
+}
+
+// ---- Recordatorios (notificaciones del navegador, mientras la app esté abierta) ----
+let notifPermission = (typeof Notification !== 'undefined') ? Notification.permission : 'unsupported';
+
+function updateNotifHint(){
+  const hint = document.getElementById('notifHint');
+  if(!hint) return;
+  if(notifPermission === 'unsupported'){
+    hint.textContent = '';
+  } else if(notifPermission === 'granted'){
+    hint.innerHTML = '🔔 Recordatorios activados — solo avisan mientras esta app esté abierta.';
+  } else if(notifPermission === 'denied'){
+    hint.innerHTML = '🔕 Bloqueaste las notificaciones. Actívalas en Ajustes de Safari para recibir recordatorios.';
+  } else {
+    hint.innerHTML = '🔔 <a onclick="ensureNotificationPermission()">Activa las notificaciones</a> para recibir tus recordatorios (solo funcionan con la app abierta).';
+  }
+}
+
+async function ensureNotificationPermission(){
+  if(typeof Notification === 'undefined') return false;
+  if(Notification.permission === 'granted'){ notifPermission='granted'; updateNotifHint(); return true; }
+  if(Notification.permission === 'denied'){ notifPermission='denied'; updateNotifHint(); return false; }
+  try{
+    const perm = await Notification.requestPermission();
+    notifPermission = perm;
+    updateNotifHint();
+    return perm === 'granted';
+  }catch(err){
+    return false;
+  }
+}
+
+function checkReminders(){
+  if(typeof Notification === 'undefined' || Notification.permission !== 'granted') return;
+  const now = new Date();
+  let changed = false;
+
+  Object.keys(events).forEach(key=>{
+    events[key].forEach(ev=>{
+      if(!ev.reminderMinutes || ev.fired) return;
+      const [y,m,d] = key.split('-').map(Number);
+      const [hh,mm] = (ev.time || '09:00').split(':').map(Number);
+      const eventTime = new Date(y, m-1, d, hh, mm);
+      const remindAt = new Date(eventTime.getTime() - ev.reminderMinutes*60000);
+
+      if(now >= remindAt && now <= eventTime){
+        new Notification(ev.title, {
+          body: (ev.time ? 'Hoy a las '+ev.time : 'Hoy') + (ev.notes ? ' · '+ev.notes : ''),
+        });
+        ev.fired = true;
+        changed = true;
+      }
+    });
+  });
+
+  if(changed) persistEvents();
+}
+
+setInterval(checkReminders, 30000);
+
+loadEvents().then(()=>{
+  updateNotifHint();
+});
 </script>
 </body>
 </html>
