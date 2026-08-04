@@ -394,4 +394,1183 @@
   .c2{ background:#EAD2C7; }
   .c3{ background:#DAD9EC; }
   .c4{ background:#F0DCE4; }
-  .
+  .c5{ background:#D6E6ED; }
+  .c6{ background:#E2E7C8; }
+
+  /* Saturday sessions strip */
+  .saturday{
+    margin-top:22px;
+    background:var(--card);
+    border:1.5px solid var(--ink);
+    border-radius:4px;
+    padding:16px 20px;
+    box-shadow: 0 3px 0 var(--ink);
+  }
+  .saturday h2{
+    font-family:'Fraunces', serif;
+    font-size:18px;
+    margin:0 0 4px;
+    font-weight:600;
+  }
+  .saturday p.sub{
+    font-family:'IBM Plex Mono', monospace;
+    font-size:11.5px;
+    color:var(--ink-soft);
+    margin:0 0 12px;
+  }
+  .sat-sessions{ display:flex; flex-wrap:wrap; gap:10px; }
+  .sat-chip{
+    border:1px solid var(--ink);
+    background:var(--parchment-dim);
+    border-radius:3px;
+    padding:8px 12px;
+    font-family:'IBM Plex Mono', monospace;
+    font-size:11.5px;
+    cursor:pointer;
+    line-height:1.5;
+  }
+  .sat-chip:hover{ background:var(--ochre); border-color:var(--ochre-deep); }
+  .sat-chip b{ display:block; font-family:'Space Grotesk',sans-serif; font-size:13px; font-weight:600;}
+
+  footer{
+    text-align:center;
+    font-family:'IBM Plex Mono', monospace;
+    font-size:11px;
+    color:var(--ink-soft);
+    margin-top:34px;
+    opacity:.7;
+  }
+
+  /* ---- Modal ---- */
+  .overlay{
+    position:fixed; inset:0;
+    background:rgba(27,42,74,0.45);
+    backdrop-filter: blur(2px);
+    display:none;
+    align-items:center;
+    justify-content:center;
+    z-index:50;
+    padding:20px;
+  }
+  .overlay.open{ display:flex; }
+  .modal{
+    background:var(--card);
+    width:100%; max-width:460px;
+    border-radius:5px;
+    border:1.5px solid var(--ink);
+    box-shadow: 0 8px 0 rgba(27,42,74,0.18), 0 12px 30px rgba(0,0,0,0.25);
+    max-height:88vh;
+    overflow-y:auto;
+  }
+  .modal-head{
+    padding:20px 22px 14px;
+    border-bottom:1px solid var(--line);
+    display:flex; justify-content:space-between; align-items:flex-start; gap:10px;
+  }
+  .modal-head .tag{
+    font-family:'IBM Plex Mono', monospace;
+    font-size:10.5px;
+    letter-spacing:.08em;
+    text-transform:uppercase;
+    color:var(--teal);
+    font-weight:600;
+  }
+  .modal-head h3{
+    font-family:'Fraunces', serif;
+    font-size:23px;
+    font-weight:700;
+    margin:4px 0 0;
+    line-height:1.1;
+  }
+  .close-x{
+    border:1px solid var(--line);
+    border-radius:50%;
+    width:30px; height:30px;
+    display:flex; align-items:center; justify-content:center;
+    cursor:pointer;
+    font-size:16px;
+    color:var(--ink-soft);
+    flex-shrink:0;
+    background:transparent;
+  }
+  .close-x:hover{ background:var(--ink); color:#fff; border-color:var(--ink); }
+
+  .modal-body{ padding:16px 22px 6px; }
+  .field{ margin-bottom:14px; }
+  .field label{
+    display:block;
+    font-family:'IBM Plex Mono', monospace;
+    font-size:10.5px;
+    letter-spacing:.07em;
+    text-transform:uppercase;
+    color:var(--ink-soft);
+    margin-bottom:5px;
+  }
+  .field .view{
+    font-size:15px;
+    font-weight:500;
+  }
+  .field input, .field select{
+    width:100%;
+    font-family:'Space Grotesk', sans-serif;
+    font-size:14.5px;
+    padding:8px 10px;
+    border:1.3px solid var(--line);
+    border-radius:3px;
+    background:#fff;
+    color:var(--ink);
+  }
+  .field input:focus, .field select:focus{ border-color:var(--teal); }
+  .row2{ display:grid; grid-template-columns:1fr 1fr; gap:12px; }
+  .daypicker{ display:flex; gap:6px; flex-wrap:wrap; }
+  .daypicker button{
+    padding:6px 10px;
+    font-size:12px;
+    border-radius:20px;
+  }
+  .daypicker button.on{ background:var(--ink); color:var(--parchment); }
+
+  .modal-foot{
+    padding:14px 22px 22px;
+    display:flex;
+    gap:10px;
+    flex-wrap:wrap;
+    border-top:1px solid var(--line);
+    margin-top:8px;
+  }
+  .modal-foot .spacer{ flex:1; }
+  .danger{ border-color:#9B3B3B; color:#9B3B3B; }
+  .danger:hover{ background:#9B3B3B; color:#fff; }
+
+  @media (max-width: 720px){
+    .grid{ grid-template-columns: 42px repeat(5, minmax(90px,1fr)); overflow-x:auto; }
+    .board{ overflow-x:auto; }
+    .daycol-head .full{ font-size:12px; }
+    .class-block .name{ font-size:11px; }
+  }
+
+  /* ---- Mobile agenda (day-by-day list) ---- */
+  .agenda{ display:none; }
+  @media (max-width: 620px){
+    .board{ display:none; }
+    .agenda{ display:block; }
+  }
+  .agenda-day{
+    background:var(--card);
+    border:1.5px solid var(--ink);
+    border-radius:4px;
+    margin-bottom:14px;
+    overflow:hidden;
+    box-shadow: 0 3px 0 var(--ink);
+  }
+  .agenda-day-head{
+    background:var(--parchment-dim);
+    border-bottom:1.5px solid var(--ink);
+    padding:10px 14px;
+    display:flex;
+    align-items:baseline;
+    gap:8px;
+  }
+  .agenda-day-head .short{
+    font-family:'IBM Plex Mono', monospace;
+    font-size:11px;
+    letter-spacing:.1em;
+    text-transform:uppercase;
+    color:var(--teal);
+    font-weight:600;
+  }
+  .agenda-day-head .full{
+    font-family:'Fraunces', serif;
+    font-size:17px;
+    font-weight:600;
+  }
+  .agenda-empty{
+    padding:14px;
+    font-family:'IBM Plex Mono', monospace;
+    font-size:12px;
+    color:var(--ink-soft);
+    font-style:italic;
+  }
+  .agenda-item{
+    display:flex;
+    gap:12px;
+    padding:12px 14px;
+    border-top:1px solid var(--line);
+    cursor:pointer;
+    align-items:flex-start;
+  }
+  .agenda-item:first-child{ border-top:none; }
+  .agenda-item:active{ background:var(--parchment-dim); }
+  .agenda-item .swatch{
+    width:5px;
+    align-self:stretch;
+    border-radius:3px;
+    flex-shrink:0;
+  }
+  .agenda-item .time{
+    font-family:'IBM Plex Mono', monospace;
+    font-size:11.5px;
+    color:var(--ink-soft);
+    width:56px;
+    flex-shrink:0;
+    line-height:1.4;
+    padding-top:2px;
+  }
+  .agenda-item .info .name{
+    font-family:'Fraunces', serif;
+    font-weight:600;
+    font-size:15px;
+    line-height:1.2;
+  }
+  .agenda-item .info .room{
+    font-family:'IBM Plex Mono', monospace;
+    font-size:11.5px;
+    color:var(--ink-soft);
+    margin-top:2px;
+  }
+</style>
+</head>
+<body>
+
+<div id="homeScreen">
+  <div class="eyebrow">Bienvenido · Periodo 202620</div>
+  <h1>Tu <em>horario</em></h1>
+  
+  <div class="home-card">
+    <div style="margin-bottom: 24px;">
+      <h3 style="font-family:'Fraunces', serif; font-size: 22px; margin: 0 0 8px;">Sincroniza tus clases</h3>
+      <p>Cada horario vive bajo un código único. Créalo la primera vez, o entra con el código que te compartieron para ver y editar tu horario en cualquier dispositivo.</p>
+    </div>
+    
+    <div class="field">
+      <label>¿Ya tienes un código?</label>
+      <input id="gateCodeInput" placeholder="Ej. A3F9K2" style="text-transform:uppercase; padding: 12px; font-size: 16px;" maxlength="8">
+    </div>
+    <button class="primary" style="width:100%; padding:14px; margin-bottom:16px; font-size: 15px;" onclick="joinWithCode()">Entrar con este código</button>
+    
+    <div style="text-align:center; font-family:'IBM Plex Mono',monospace; font-size:12px; color:var(--ink-soft); margin:16px 0;">— o si eres nuevo —</div>
+    
+    <button class="ghost" style="width:100%; padding:14px; font-size: 15px;" onclick="createNewCode()">Crear mi propio horario nuevo</button>
+  </div>
+</div>
+
+<div class="wrap" id="appRoot" style="display:none;">
+
+  <header>
+    <div>
+      <div class="eyebrow">Universidad de los Andes · Periodo 202620</div>
+      <h1>Tu <em>horario</em></h1>
+    </div>
+    <div class="meta">
+      03‑Ago‑2026 → 28‑Nov‑2026<br>
+      <b>Toca una clase</b> para ver el detalle o editarla<br>
+      <span style="display:inline-flex; align-items:center; gap:6px; margin-top:6px;">
+        Código: <b id="codeBadge" style="letter-spacing:.06em;"></b>
+        <a onclick="copyCode()" style="color:var(--teal); cursor:pointer; text-decoration:underline;">copiar</a>
+        · <a onclick="switchCode()" style="color:var(--ink-soft); cursor:pointer; text-decoration:underline;">cambiar</a>
+      </span>
+    </div>
+  </header>
+
+  <div class="tabs">
+    <button class="tab-btn on" id="tabWeekly" onclick="switchView('weekly')">Horario semanal</button>
+    <button class="tab-btn" id="tabCalendar" onclick="switchView('calendar')">Calendario · eventos</button>
+  </div>
+
+  <div class="toolbar" id="weeklyToolbar">
+    <button class="primary" onclick="openNewClassModal()">+ Agregar clase</button>
+    <button class="save-btn" onclick="manualSave()">💾 Guardar Cambios</button>
+    <button class="ghost" onclick="exportScheduleICS()">📅 Exportar a Apple/Google Calendar</button>
+    <button class="ghost" onclick="resetAll()">Restaurar horario original</button>
+    <span id="saveStatus" style="font-family:'IBM Plex Mono',monospace; font-size:12px; color:var(--teal); font-weight:600; align-self:center; margin-left:8px;"></span>
+  </div>
+
+  <div id="installHint" style="display:none; font-family:'IBM Plex Mono',monospace; font-size:11.5px; color:var(--ink-soft); background:var(--parchment-dim); border:1px dashed var(--line); border-radius:4px; padding:10px 14px; margin-bottom:18px;">
+    📲 Para usarla como app: toca <b>Compartir</b> en Safari → <b>Agregar a pantalla de inicio</b>.
+  </div>
+
+  <div id="weeklyView">
+    <div class="board">
+      <div class="grid" id="grid"></div>
+    </div>
+
+    <div class="agenda" id="agenda"></div>
+
+    <div class="saturday">
+      <h2>Sesiones especiales — Capacitación para Estudiantes</h2>
+      <p class="sub">NRC 42740 · no ocurren en un horario semanal fijo</p>
+      <div class="sat-sessions" id="satSessions"></div>
+    </div>
+
+    <footer>Instrumentos 1 (03‑Ago–26‑Sep) cambia a Instrumentos 2 (05‑Oct–28‑Nov) — mismo bloque horario, distinto salón e instructor.</footer>
+  </div>
+
+  <div id="calendarView" style="display:none;">
+    <div class="cal-toolbar">
+      <div class="cal-nav">
+        <button class="ghost sq" onclick="calShiftMonth(-1)">‹</button>
+        <div class="cal-title" id="calTitle"></div>
+        <button class="ghost sq" onclick="calShiftMonth(1)">›</button>
+      </div>
+      <div class="cal-nav">
+        <button class="ghost sq" onclick="calShiftYear(-1)" title="Año anterior">«</button>
+        <button class="ghost" onclick="calGoToday()">Hoy</button>
+        <button class="ghost sq" onclick="calShiftYear(1)" title="Año siguiente">»</button>
+      </div>
+    </div>
+    <div style="margin-bottom:12px; display: flex; gap: 10px; align-items: center; flex-wrap: wrap;">
+      <button class="save-btn" onclick="manualSave()">💾 Guardar Cambios</button>
+      <button class="ghost" onclick="exportEventsICS()">📅 Exportar todos mis eventos (.ics)</button>
+      <span id="saveStatusCal" style="font-family:'IBM Plex Mono',monospace; font-size:12px; color:var(--teal); font-weight:600;"></span>
+    </div>
+    <div class="notif-hint" id="notifHint"></div>
+    <div class="cal-board">
+      <div class="cal-weekdays" id="calWeekdays"></div>
+      <div class="cal-grid" id="calGrid"></div>
+    </div>
+    <div class="cal-upcoming">
+      <h2>Próximos eventos</h2>
+      <div id="upcomingList"></div>
+    </div>
+  </div>
+</div>
+
+<div class="overlay" id="overlay">
+  <div class="modal" id="modalBox"></div>
+</div>
+
+<script>
+// ==================================================
+// Firebase (base de datos en la nube para sincronizar
+// entre dispositivos con el mismo código de acceso)
+// ==================================================
+const firebaseConfig = {
+  apiKey: "",
+  authDomain: "",
+  projectId: "",
+  storageBucket: "",
+  messagingSenderId: "",
+  appId: ""
+};
+
+let firebaseReady = false;
+let db = null;
+try{
+  if(firebaseConfig.apiKey && firebaseConfig.projectId){
+    firebase.initializeApp(firebaseConfig);
+    db = firebase.firestore();
+    firebaseReady = true;
+  }
+}catch(err){
+  console.error('Firebase no se pudo inicializar:', err);
+  firebaseReady = false;
+}
+
+// ==================================================
+// Código de acceso: cada horario vive en su propio código
+// ==================================================
+const CODE_KEY = 'horario-access-code';
+let accessCode = localStorage.getItem(CODE_KEY);
+let unsubscribeSnapshot = null;
+
+// Verifica si ya hay código guardado al cargar la página
+window.onload = () => {
+  if (accessCode) {
+    initApp();
+  }
+};
+
+function generateCode(){
+  const chars = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789'; 
+  let code = '';
+  for(let i=0;i<6;i++) code += chars[Math.floor(Math.random()*chars.length)];
+  return code;
+}
+
+function createNewCode(){
+  accessCode = generateCode();
+  localStorage.setItem(CODE_KEY, accessCode);
+  alert('Tu código de acceso es: ' + accessCode + '\n\nGuárdalo — lo necesitas para entrar desde otro dispositivo o para compartir este mismo horario con alguien más.');
+  initApp();
+}
+
+function joinWithCode(){
+  const input = document.getElementById('gateCodeInput').value.trim().toUpperCase();
+  if(!input){ alert('Escribe un código para continuar.'); return; }
+  accessCode = input;
+  localStorage.setItem(CODE_KEY, accessCode);
+  initApp();
+}
+
+function switchCode(){
+  if(!confirm('Vas a salir de este horario.\n\n¿Ya tienes tu código actual apuntado en algún lado? Si no, cancela y cópialo primero.')) return;
+  if(unsubscribeSnapshot) unsubscribeSnapshot();
+  localStorage.removeItem(CODE_KEY);
+  location.reload();
+}
+
+function copyCode(){
+  navigator.clipboard.writeText(accessCode).then(()=>{
+    alert('Código copiado: ' + accessCode);
+  }).catch(()=>{
+    alert('Tu código es: ' + accessCode);
+  });
+}
+
+function attachSyncListener(){
+  if(!firebaseReady || !accessCode) return;
+  if(unsubscribeSnapshot) unsubscribeSnapshot();
+  unsubscribeSnapshot = db.collection('horarios').doc(accessCode).onSnapshot(snap=>{
+    if(!snap.exists) return;
+    const data = snap.data();
+    if(data.classes){
+      classes = data.classes;
+      localStorage.setItem('cache-classes-'+accessCode, JSON.stringify(classes));
+      renderBlocks();
+    }
+    if(data.events){
+      events = data.events;
+      localStorage.setItem('cache-events-'+accessCode, JSON.stringify(events));
+      renderCalendar();
+      renderUpcoming();
+    }
+  }, err=>{
+    console.error('Error de sincronización en vivo:', err);
+  });
+}
+
+async function initApp(){
+  document.getElementById('homeScreen').style.display = 'none';
+  document.getElementById('appRoot').style.display = '';
+  document.getElementById('codeBadge').textContent = accessCode;
+
+  buildGrid();
+  renderSaturdays();
+  await loadClasses();
+  await loadEvents();
+  attachSyncListener();
+  updateNotifHint();
+
+  const isIOS = /iphone|ipad|ipod/i.test(navigator.userAgent);
+  const isStandalone = window.navigator.standalone === true;
+  if(isIOS && !isStandalone){
+    document.getElementById('installHint').style.display = 'block';
+  }
+}
+
+// ==================================================
+// GUARDADO MANUAL DE CAMBIOS
+// ==================================================
+async function manualSave() {
+  const statusEl = document.getElementById('saveStatus');
+  const statusCalEl = document.getElementById('saveStatusCal');
+  
+  if (statusEl) statusEl.textContent = 'Guardando...';
+  if (statusCalEl) statusCalEl.textContent = 'Guardando...';
+
+  await persistClasses();
+  await persistEvents();
+
+  const successMsg = '✓ Cambios guardados exitosamente';
+  if (statusEl) statusEl.textContent = successMsg;
+  if (statusCalEl) statusCalEl.textContent = successMsg;
+  
+  setTimeout(() => { 
+    if (statusEl) statusEl.textContent = ''; 
+    if (statusCalEl) statusCalEl.textContent = ''; 
+  }, 4000);
+}
+
+
+const DAYS = ['Lun','Mar','Mié','Jue','Vie'];
+const DAY_FULL = {Lun:'Lunes', Mar:'Martes', Mié:'Miércoles', Jue:'Jueves', Vie:'Viernes'};
+const START_HOUR = 6.5; 
+const END_HOUR = 15;    
+const PX_PER_HOUR = 56;
+
+const ORIGINAL = [
+  {
+    id:'tierra', name:'Ciencias de la Tierra', nrc:'14989', profesor:'Pardo Villaveces, Natalia',
+    dias:['Mar','Jue'], inicio:'08:00', fin:'09:20',
+    edificio:'Centro del Japón (CJ)', salon:'CJ_001', campus:'Campus Principal',
+    rango:'03-Ago-2026 – 28-Nov-2026', color:'c0'
+  },
+  {
+    id:'instrumentos', name:'Instrumentos', nrc:'52133 / 81440', profesor:'Rodríguez Vargas, David → Montero Jiménez, Arturo',
+    dias:['Mié','Vie'], inicio:'11:00', fin:'12:50',
+    edificio:'Bloque C', salon:'C_409B → C_409A', campus:'Campus Principal',
+    rango:'Ciclo 1: 03-Ago–26-Sep (C_409B, Rodríguez Vargas) · Ciclo 2: 05-Oct–28-Nov (C_409A, Montero Jiménez)', color:'c1'
+  },
+  {
+    id:'principios', name:'Principios Arquitectónicos', nrc:'52124', profesor:'Vallejo Cuartas, María',
+    dias:['Mié','Vie'], inicio:'07:00', fin:'09:50',
+    edificio:'Bloque C', salon:'C_410', campus:'Campus Principal',
+    rango:'03-Ago-2026 – 28-Nov-2026', color:'c2'
+  },
+  {
+    id:'pensar', name:'Pensar, Comunicar y…', nrc:'84002', profesor:'Guerrero Torres, Natalia',
+    dias:['Mar','Jue'], inicio:'06:30', fin:'07:50',
+    edificio:'Jue: Edif. Aulas (AU_306) · Mar: Edif. Alberto Lleras (LL_203)', salon:'AU_306 / LL_203', campus:'Campus Principal',
+    rango:'03-Ago-2026 – 28-Nov-2026', color:'c3'
+  },
+  {
+    id:'entrenamiento', name:'Entrenamiento de la…', nrc:'75177', profesor:'Carmona Zamora, Mario',
+    dias:['Mié'], inicio:'14:00', fin:'14:50',
+    edificio:'Edif. Gata Golosa (GA)', salon:'GA_201', campus:'Campus Principal',
+    rango:'03-Ago-2026 – 28-Nov-2026', color:'c4'
+  }
+];
+
+const SATURDAYS = [
+  { titulo:'Sesión presencial', fecha:'Sábado 15-Ago-2026', hora:'08:00 – 13:50', lugar:'Edif. Corcas, Salón CC_102 (Campus Principal)', profesores:'Giraldo Rozo, Juan · Carrero Siábato, Natalia' },
+  { titulo:'Sesión virtual', fecha:'Sábado 05-Sep-2026', hora:'11:00 – 12:50', lugar:'Virtual', profesores:'Giraldo Rozo, Juan · Carrero Siábato, Natalia' },
+  { titulo:'Sesión virtual', fecha:'Sábado 12-Sep-2026', hora:'11:00 – 12:50', lugar:'Virtual', profesores:'Giraldo Rozo, Juan · Carrero Siábato, Natalia' },
+];
+
+let classes = JSON.parse(JSON.stringify(ORIGINAL));
+let editingId = null;
+let colorCursor = classes.length;
+
+async function loadClasses(){
+  const cacheKey = 'cache-classes-'+accessCode;
+  try{
+    if(firebaseReady && accessCode){
+      const snap = await db.collection('horarios').doc(accessCode).get();
+      if(snap.exists && snap.data().classes){
+        classes = snap.data().classes;
+        localStorage.setItem(cacheKey, JSON.stringify(classes));
+      } else {
+        await persistClasses();
+      }
+    } else {
+      const cached = localStorage.getItem(cacheKey);
+      if(cached) classes = JSON.parse(cached);
+    }
+  }catch(err){
+    console.error('No se pudo cargar desde la nube, usando copia local:', err);
+    const cached = localStorage.getItem(cacheKey);
+    if(cached) classes = JSON.parse(cached);
+  }
+  renderBlocks();
+}
+
+async function persistClasses(){
+  const cacheKey = 'cache-classes-'+accessCode;
+  localStorage.setItem(cacheKey, JSON.stringify(classes));
+  try{
+    if(firebaseReady && accessCode){
+      await db.collection('horarios').doc(accessCode).set({classes}, {merge:true});
+    }
+  }catch(err){
+    console.error('Storage error:', err);
+  }
+}
+
+function timeToY(t){
+  const [h,m] = t.split(':').map(Number);
+  return ((h + m/60) - START_HOUR) * PX_PER_HOUR;
+}
+
+function buildGrid(){
+  const grid = document.getElementById('grid');
+  grid.innerHTML = '';
+  const corner = document.createElement('div');
+  corner.className = 'corner';
+  grid.appendChild(corner);
+
+  DAYS.forEach(d=>{
+    const h = document.createElement('div');
+    h.className = 'daycol-head';
+    h.innerHTML = d + '<span class="full">'+DAY_FULL[d]+'</span>';
+    grid.appendChild(h);
+  });
+
+  const totalHours = END_HOUR - START_HOUR;
+  const rowsCount = Math.ceil(totalHours);
+
+  for(let i=0;i<rowsCount;i++){
+    const hourLabel = document.createElement('div');
+    hourLabel.className='hour-row';
+    const hh = Math.floor(START_HOUR + i);
+    hourLabel.textContent = (hh<10?'0':'')+hh+':00';
+    grid.appendChild(hourLabel);
+
+    for(let d=0; d<5; d++){
+      const cell = document.createElement('div');
+      cell.className='cell';
+      grid.appendChild(cell);
+    }
+  }
+  grid.style.position='relative';
+  renderBlocks();
+}
+
+function renderBlocks(){
+  document.querySelectorAll('.class-block').forEach(el=>el.remove());
+  const grid = document.getElementById('grid');
+  const gridRect = grid.getBoundingClientRect();
+  const hourColWidth = 58;
+  const dayColWidth = (gridRect.width - hourColWidth) / 5;
+  const headerHeight = document.querySelector('.daycol-head').getBoundingClientRect().height;
+
+  classes.forEach(cls=>{
+    cls.dias.forEach(day=>{
+      const dayIndex = DAYS.indexOf(day);
+      if(dayIndex === -1) return;
+      const top = headerHeight + timeToY(cls.inicio);
+      const height = Math.max(timeToY(cls.fin) - timeToY(cls.inicio), 30);
+      const block = document.createElement('div');
+      block.className = 'class-block ' + cls.color;
+      block.style.top = top+'px';
+      block.style.height = height+'px';
+      block.style.left = (hourColWidth + dayIndex*dayColWidth + 3)+'px';
+      block.style.width = (dayColWidth - 6)+'px';
+      block.innerHTML = `<div class="code">${cls.inicio}–${cls.fin}</div><div class="name">${cls.name}</div><div class="room">${cls.salon}</div>`;
+      block.onclick = ()=> openDetail(cls.id);
+      grid.appendChild(block);
+    });
+  });
+  renderAgenda();
+}
+
+const COLOR_HEX = {
+  c0:'#C89B3C', c1:'#2E6E62', c2:'#B96A4A', c3:'#5A5A9E', c4:'#B0567D', c5:'#3B7FA0', c6:'#7A8A2E'
+};
+
+function renderAgenda(){
+  const agenda = document.getElementById('agenda');
+  agenda.innerHTML = '';
+  DAYS.forEach(day=>{
+    const dayBlock = document.createElement('div');
+    dayBlock.className = 'agenda-day';
+    const head = document.createElement('div');
+    head.className = 'agenda-day-head';
+    head.innerHTML = `<span class="short">${day}</span><span class="full">${DAY_FULL[day]}</span>`;
+    dayBlock.appendChild(head);
+
+    const dayClasses = classes
+      .filter(c => c.dias.includes(day))
+      .sort((a,b)=> a.inicio.localeCompare(b.inicio));
+
+    if(dayClasses.length === 0){
+      const empty = document.createElement('div');
+      empty.className = 'agenda-empty';
+      empty.textContent = 'Sin clases';
+      dayBlock.appendChild(empty);
+    } else {
+      dayClasses.forEach(cls=>{
+        const item = document.createElement('div');
+        item.className = 'agenda-item';
+        item.innerHTML = `
+          <div class="swatch" style="background:${COLOR_HEX[cls.color]||'#C89B3C'}"></div>
+          <div class="time">${cls.inicio}<br>${cls.fin}</div>
+          <div class="info">
+            <div class="name">${cls.name}</div>
+            <div class="room">${cls.salon || '—'}${cls.edificio ? ' · '+cls.edificio.split('(')[0].trim() : ''}</div>
+          </div>
+        `;
+        item.onclick = ()=> openDetail(cls.id);
+        dayBlock.appendChild(item);
+      });
+    }
+    agenda.appendChild(dayBlock);
+  });
+}
+
+window.addEventListener('resize', renderBlocks);
+
+function renderSaturdays(){
+  const wrap = document.getElementById('satSessions');
+  wrap.innerHTML = '';
+  SATURDAYS.forEach(s=>{
+    const chip = document.createElement('div');
+    chip.className='sat-chip';
+    chip.innerHTML = `<b>${s.fecha}</b>${s.hora} · ${s.titulo}<br>${s.lugar}`;
+    chip.onclick = ()=> alert(`${s.titulo}\n${s.fecha}\nHora: ${s.hora}\nLugar: ${s.lugar}\nInstructores: ${s.profesores}`);
+    wrap.appendChild(chip);
+  });
+}
+
+function openDetail(id){
+  editingId = id;
+  const cls = classes.find(c=>c.id===id);
+  renderModal(cls, false);
+  document.getElementById('overlay').classList.add('open');
+}
+
+function openNewClassModal(){
+  editingId = null;
+  const blank = {
+    id: 'c'+Date.now(), name:'', nrc:'', profesor:'',
+    dias:[], inicio:'08:00', fin:'09:20',
+    edificio:'', salon:'', campus:'Campus Principal', rango:'', color: 'c'+(colorCursor++ % 7)
+  };
+  renderModal(blank, true);
+  document.getElementById('overlay').classList.add('open');
+}
+
+function renderModal(cls, forceEdit){
+  const box = document.getElementById('modalBox');
+  const isNew = !classes.find(c=>c.id===cls.id);
+  box.innerHTML = `
+    <div class="modal-head">
+      <div>
+        <div class="tag">${isNew ? 'Nueva clase' : 'NRC ' + cls.nrc}</div>
+        <h3>${isNew ? 'Agregar clase' : cls.name}</h3>
+      </div>
+      <div class="close-x" onclick="closeModal()">✕</div>
+    </div>
+    <div class="modal-body" id="modalBody"></div>
+    <div class="modal-foot" id="modalFoot"></div>
+  `;
+  fillView(cls, isNew || forceEdit);
+}
+
+function fillView(cls, editMode){
+  const body = document.getElementById('modalBody');
+  const foot = document.getElementById('modalFoot');
+
+  if(!editMode){
+    body.innerHTML = `
+      <div class="field"><label>Materia</label><div class="view">${cls.name}</div></div>
+      <div class="row2">
+        <div class="field"><label>NRC</label><div class="view">${cls.nrc||'—'}</div></div>
+        <div class="field"><label>Días</label><div class="view">${cls.dias.join(', ')||'—'}</div></div>
+      </div>
+      <div class="row2">
+        <div class="field"><label>Hora inicio</label><div class="view">${cls.inicio}</div></div>
+        <div class="field"><label>Hora fin</label><div class="view">${cls.fin}</div></div>
+      </div>
+      <div class="field"><label>Profesor(a)</label><div class="view">${cls.profesor||'—'}</div></div>
+      <div class="row2">
+        <div class="field"><label>Edificio</label><div class="view">${cls.edificio||'—'}</div></div>
+        <div class="field"><label>Salón</label><div class="view">${cls.salon||'—'}</div></div>
+      </div>
+      <div class="field"><label>Campus</label><div class="view">${cls.campus||'—'}</div></div>
+      <div class="field"><label>Rango de fechas</label><div class="view" style="font-size:13px; line-height:1.5;">${cls.rango||'—'}</div></div>
+    `;
+    foot.innerHTML = `
+      <button class="ghost" onclick="closeModal()">Cerrar</button>
+      <div class="spacer"></div>
+      <button class="danger" onclick="deleteClass('${cls.id}')">Eliminar</button>
+      <button class="primary" onclick="switchToEdit('${cls.id}')">Editar / reemplazar</button>
+    `;
+  } else {
+    body.innerHTML = `
+      <div class="field"><label>Materia</label><input id="f_name" value="${escAttr(cls.name)}" placeholder="Nombre de la materia"></div>
+      <div class="row2">
+        <div class="field"><label>NRC</label><input id="f_nrc" value="${escAttr(cls.nrc)}" placeholder="Ej. 12345"></div>
+        <div class="field"><label>Color</label>
+          <select id="f_color">
+            ${['c0','c1','c2','c3','c4','c5','c6'].map(c=>`<option value="${c}" ${cls.color===c?'selected':''}>${c}</option>`).join('')}
+          </select>
+        </div>
+      </div>
+      <div class="field"><label>Días</label>
+        <div class="daypicker" id="f_dias">
+          ${DAYS.map(d=>`<button type="button" data-day="${d}" class="${cls.dias.includes(d)?'on':''}" onclick="toggleDay(this)">${d}</button>`).join('')}
+        </div>
+      </div>
+      <div class="row2">
+        <div class="field"><label>Hora inicio</label><input id="f_inicio" type="time" value="${cls.inicio}"></div>
+        <div class="field"><label>Hora fin</label><input id="f_fin" type="time" value="${cls.fin}"></div>
+      </div>
+      <div class="field"><label>Profesor(a)</label><input id="f_profesor" value="${escAttr(cls.profesor)}" placeholder="Nombre del profesor"></div>
+      <div class="row2">
+        <div class="field"><label>Edificio</label><input id="f_edificio" value="${escAttr(cls.edificio)}" placeholder="Ej. Bloque C"></div>
+        <div class="field"><label>Salón</label><input id="f_salon" value="${escAttr(cls.salon)}" placeholder="Ej. C_410"></div>
+      </div>
+      <div class="field"><label>Campus</label><input id="f_campus" value="${escAttr(cls.campus)}" placeholder="Campus Principal"></div>
+      <div class="field"><label>Rango de fechas / notas</label><input id="f_rango" value="${escAttr(cls.rango)}" placeholder="03-Ago-2026 – 28-Nov-2026"></div>
+    `;
+    foot.innerHTML = `
+      <button class="ghost" onclick="closeModal()">Cancelar</button>
+      <div class="spacer"></div>
+      <button class="primary" onclick="saveClass('${cls.id}')">Aceptar</button>
+    `;
+  }
+}
+
+function toggleDay(btn){ btn.classList.toggle('on'); }
+
+function switchToEdit(id){
+  const cls = classes.find(c=>c.id===id);
+  fillView(cls, true);
+  document.querySelector('.tag').textContent = 'Editando · NRC ' + (cls.nrc||'—');
+}
+
+function saveClass(id){
+  const name = document.getElementById('f_name').value.trim() || 'Materia sin nombre';
+  const nrc = document.getElementById('f_nrc').value.trim();
+  const color = document.getElementById('f_color').value;
+  const dias = Array.from(document.querySelectorAll('#f_dias button.on')).map(b=>b.dataset.day);
+  const inicio = document.getElementById('f_inicio').value || '08:00';
+  const fin = document.getElementById('f_fin').value || '09:00';
+  const profesor = document.getElementById('f_profesor').value.trim();
+  const edificio = document.getElementById('f_edificio').value.trim();
+  const salon = document.getElementById('f_salon').value.trim();
+  const campus = document.getElementById('f_campus').value.trim();
+  const rango = document.getElementById('f_rango').value.trim();
+
+  const existingIndex = classes.findIndex(c=>c.id===id);
+  const newCls = {id, name, nrc, color, dias, inicio, fin, profesor, edificio, salon, campus, rango};
+
+  if(existingIndex >= 0) classes[existingIndex] = newCls;
+  else classes.push(newCls);
+  
+  renderBlocks();
+  closeModal();
+  // El guardado se hará ahora cuando toquen "Guardar Cambios"
+}
+
+function deleteClass(id){
+  if(!confirm('¿Eliminar esta clase del horario?')) return;
+  classes = classes.filter(c=>c.id!==id);
+  renderBlocks();
+  closeModal();
+}
+
+function closeModal(){
+  document.getElementById('overlay').classList.remove('open');
+  editingId = null;
+}
+
+function resetAll(){
+  if(!confirm('Esto restaura el horario a los datos originales de tu registro. ¿Continuar?')) return;
+  classes = JSON.parse(JSON.stringify(ORIGINAL));
+  renderBlocks();
+}
+
+function escAttr(s){ return (s||'').replace(/"/g,'&quot;'); }
+
+document.getElementById('overlay').addEventListener('click', (e)=>{
+  if(e.target.id==='overlay') closeModal();
+});
+document.addEventListener('keydown', (e)=>{
+  if(e.key==='Escape') closeModal();
+});
+
+// ==================================================
+// Vista: pestañas (horario semanal / calendario)
+// ==================================================
+function switchView(view){
+  const weekly = document.getElementById('weeklyView');
+  const cal = document.getElementById('calendarView');
+  const weeklyToolbar = document.getElementById('weeklyToolbar');
+  document.getElementById('tabWeekly').classList.toggle('on', view==='weekly');
+  document.getElementById('tabCalendar').classList.toggle('on', view==='calendar');
+  if(view==='weekly'){
+    weekly.style.display='';
+    weeklyToolbar.style.display='';
+    cal.style.display='none';
+  } else {
+    weekly.style.display='none';
+    weeklyToolbar.style.display='none';
+    cal.style.display='';
+    renderCalendar();
+    renderUpcoming();
+  }
+}
+
+// ==================================================
+// Calendario de eventos
+// ==================================================
+const WEEKDAYS_SHORT = ['Dom','Lun','Mar','Mié','Jue','Vie','Sáb'];
+const MONTH_NAMES = ['Enero','Febrero','Marzo','Abril','Mayo','Junio','Julio','Agosto','Septiembre','Octubre','Noviembre','Diciembre'];
+
+let events = {};
+const today = new Date();
+let calYear = today.getFullYear();
+let calMonth = today.getMonth(); 
+
+async function loadEvents(){
+  const cacheKey = 'cache-events-'+accessCode;
+  try{
+    if(firebaseReady && accessCode){
+      const snap = await db.collection('horarios').doc(accessCode).get();
+      if(snap.exists && snap.data().events){
+        events = snap.data().events;
+        localStorage.setItem(cacheKey, JSON.stringify(events));
+      }
+    } else {
+      const cached = localStorage.getItem(cacheKey);
+      if(cached) events = JSON.parse(cached);
+    }
+  }catch(err){
+    const cached = localStorage.getItem(cacheKey);
+    if(cached) events = JSON.parse(cached);
+  }
+}
+
+async function persistEvents(){
+  const cacheKey = 'cache-events-'+accessCode;
+  localStorage.setItem(cacheKey, JSON.stringify(events));
+  try{
+    if(firebaseReady && accessCode){
+      await db.collection('horarios').doc(accessCode).set({events}, {merge:true});
+    }
+  }catch(err){
+    console.error('Error guardando eventos:', err);
+  }
+}
+
+function pad2(n){ return n<10 ? '0'+n : ''+n; }
+function dateKey(y,m,d){ return `${y}-${pad2(m+1)}-${pad2(d)}`; }
+
+function calShiftMonth(delta){
+  calMonth += delta;
+  if(calMonth > 11){ calMonth=0; calYear++; }
+  if(calMonth < 0){ calMonth=11; calYear--; }
+  renderCalendar();
+}
+function calShiftYear(delta){ calYear += delta; renderCalendar(); }
+function calGoToday(){ calYear = today.getFullYear(); calMonth = today.getMonth(); renderCalendar(); }
+
+function renderCalendar(){
+  document.getElementById('calTitle').textContent = `${MONTH_NAMES[calMonth]} ${calYear}`;
+  const wd = document.getElementById('calWeekdays');
+  wd.innerHTML = WEEKDAYS_SHORT.map(d=>`<div>${d}</div>`).join('');
+  const grid = document.getElementById('calGrid');
+  grid.innerHTML = '';
+
+  const firstOfMonth = new Date(calYear, calMonth, 1);
+  const startOffset = firstOfMonth.getDay();
+  const daysInMonth = new Date(calYear, calMonth+1, 0).getDate();
+  const daysInPrevMonth = new Date(calYear, calMonth, 0).getDate();
+  const totalCells = Math.ceil((startOffset + daysInMonth) / 7) * 7;
+
+  for(let i=0; i<totalCells; i++){
+    const dayNum = i - startOffset + 1;
+    let cellY = calYear, cellM = calMonth, cellD, otherMonth = false;
+
+    if(dayNum < 1){
+      cellD = daysInPrevMonth + dayNum;
+      cellM = calMonth - 1; cellY = calMonth===0 ? calYear-1 : calYear;
+      cellM = (cellM+12)%12; otherMonth = true;
+    } else if(dayNum > daysInMonth){
+      cellD = dayNum - daysInMonth;
+      cellM = (calMonth+1)%12; cellY = calMonth===11 ? calYear+1 : calYear;
+      otherMonth = true;
+    } else { cellD = dayNum; }
+
+    const key = dateKey(cellY, cellM, cellD);
+    const isToday = (cellY===today.getFullYear() && cellM===today.getMonth() && cellD===today.getDate());
+    const cell = document.createElement('div');
+    cell.className = 'cal-cell' + (otherMonth?' other-month':'') + (isToday?' today':'');
+    cell.onclick = ()=> openDayModal(key);
+
+    const dayEvents = events[key] || [];
+    const dots = dayEvents.slice(0,4).map(()=>`<span class="cal-dot" style="background:var(--ochre-deep)"></span>`).join('');
+    cell.innerHTML = `<div class="num">${cellD}</div><div class="cal-dots">${dots}</div>`;
+    grid.appendChild(cell);
+  }
+}
+
+function renderUpcoming(){
+  const list = document.getElementById('upcomingList');
+  const nowKey = dateKey(today.getFullYear(), today.getMonth(), today.getDate());
+  const flat = [];
+  Object.keys(events).forEach(key=>{
+    if(key >= nowKey){ events[key].forEach(ev=> flat.push({...ev, key})); }
+  });
+  flat.sort((a,b)=> (a.key+ (a.time||'99:99')).localeCompare(b.key+(b.time||'99:99')));
+
+  if(flat.length===0){
+    list.innerHTML = `<div class="up-empty">No tienes eventos próximos.</div>`;
+    return;
+  }
+  list.innerHTML = flat.slice(0,15).map(ev=>{
+    const [y,m,d] = ev.key.split('-');
+    const niceDate = `${d}-${MONTH_NAMES[parseInt(m,10)-1].slice(0,3)}-${y}`;
+    return `<div class="up-item" onclick="openDayModal('${ev.key}')">
+      <div class="date">${niceDate}${ev.time ? '<br>'+ev.time : ''}</div>
+      <div>
+        <div class="name">${ev.title}</div>
+        ${ev.notes ? `<div class="sub">${ev.notes}</div>` : ''}
+        ${ev.reminderMinutes ? `<div class="sub">🔔 recordatorio ${ev.reminderMinutes} min antes</div>` : ''}
+      </div>
+    </div>`;
+  }).join('');
+}
+
+function openDayModal(key){
+  const [y,m,d] = key.split('-').map(Number);
+  const niceDate = `${d} de ${MONTH_NAMES[m-1]}, ${y}`;
+  const box = document.getElementById('modalBox');
+  box.innerHTML = `
+    <div class="modal-head">
+      <div>
+        <div class="tag">Calendario</div>
+        <h3>${niceDate}</h3>
+      </div>
+      <div class="close-x" onclick="closeModal()">✕</div>
+    </div>
+    <div class="modal-body" id="modalBody">
+      <div id="dayEventsList"></div>
+      <div style="margin-top:16px; border-top:1px solid var(--line); padding-top:16px;">
+        <div class="field"><label>Título del evento</label><input id="ev_title" placeholder="Ej. Entrega de taller"></div>
+        <div class="row2">
+          <div class="field"><label>Fecha</label><input id="ev_date" type="date" value="${key}"></div>
+          <div class="field"><label>Hora (opcional)</label><input id="ev_time" type="time"></div>
+        </div>
+        <div class="field"><label>Notas (opcional)</label><input id="ev_notes" placeholder="Detalles, lugar, etc."></div>
+        <div class="field">
+          <label>Recordatorio</label>
+          <select id="ev_reminder">
+            <option value="">Sin recordatorio</option>
+            <option value="10">10 minutos antes</option>
+            <option value="30">30 minutos antes</option>
+            <option value="60">1 hora antes</option>
+            <option value="1440">1 día antes</option>
+          </select>
+        </div>
+      </div>
+    </div>
+    <div class="modal-foot">
+      <button class="ghost" onclick="closeModal()">Cerrar</button>
+      <div class="spacer"></div>
+      <button class="primary" onclick="addEvent('${key}')">+ Agregar evento</button>
+    </div>
+  `;
+  renderDayEventsList(key);
+  document.getElementById('overlay').classList.add('open');
+}
+
+function renderDayEventsList(key){
+  const wrap = document.getElementById('dayEventsList');
+  const dayEvents = events[key] || [];
+  if(dayEvents.length===0){
+    wrap.innerHTML = `<div class="agenda-empty" style="padding:0 0 4px;">Sin eventos este día todavía.</div>`;
+    return;
+  }
+  wrap.innerHTML = dayEvents.map(ev=>`
+    <div class="event-list-item">
+      <div>
+        <div class="name" style="font-family:'Fraunces',serif; font-weight:600; font-size:14.5px;">${ev.time ? ev.time+' · ' : ''}${ev.title}</div>
+        ${ev.notes ? `<div class="sub" style="font-family:'IBM Plex Mono',monospace; font-size:11px; color:var(--ink-soft); margin-top:2px;">${ev.notes}</div>` : ''}
+        ${ev.reminderMinutes ? `<div class="sub" style="font-family:'IBM Plex Mono',monospace; font-size:11px; color:var(--teal); margin-top:2px;">🔔 ${ev.reminderMinutes} min antes</div>` : ''}
+        <div class="sub" style="margin-top:4px;"><a onclick="exportSingleEventICS('${key}','${ev.id}')" style="color:var(--teal); cursor:pointer; text-decoration:underline; font-family:'IBM Plex Mono',monospace; font-size:11px;">📅 Añadir a mi calendario</a></div>
+      </div>
+      <button class="del" onclick="deleteEvent('${key}','${ev.id}')">✕</button>
+    </div>
+  `).join('');
+}
+
+async function addEvent(originalKey){
+  const title = document.getElementById('ev_title').value.trim();
+  if(!title){ alert('Ponle un título al evento.'); return; }
+  const date = document.getElementById('ev_date').value || originalKey;
+  const time = document.getElementById('ev_time').value;
+  const notes = document.getElementById('ev_notes').value.trim();
+  const reminderMinutes = document.getElementById('ev_reminder').value;
+
+  if(reminderMinutes){ await ensureNotificationPermission(); }
+
+  const ev = { id: 'e'+Date.now(), title, time, notes, reminderMinutes: reminderMinutes ? parseInt(reminderMinutes,10) : null, fired: false };
+  if(!events[date]) events[date] = [];
+  events[date].push(ev);
+
+  renderCalendar();
+  renderUpcoming();
+  openDayModal(date);
+}
+
+async function deleteEvent(key, id){
+  if(!events[key]) return;
+  events[key] = events[key].filter(e=>e.id!==id);
+  if(events[key].length===0) delete events[key];
+  renderCalendar();
+  renderUpcoming();
+  renderDayEventsList(key);
+}
+
+// ---- Recordatorios ----
+let notifPermission = (typeof Notification !== 'undefined') ? Notification.permission : 'unsupported';
+function updateNotifHint(){
+  const hint = document.getElementById('notifHint');
+  if(!hint) return;
+  if(notifPermission === 'unsupported'){ hint.textContent = ''; }
+  else if(notifPermission === 'granted'){ hint.innerHTML = '🔔 Recordatorios activados — solo avisan mientras esta app esté abierta.'; }
+  else if(notifPermission === 'denied'){ hint.innerHTML = '🔕 Bloqueaste las notificaciones. Actívalas en Ajustes para recibir recordatorios.'; }
+  else { hint.innerHTML = '🔔 <a onclick="ensureNotificationPermission()">Activa las notificaciones</a> para recibir tus recordatorios (solo funcionan con la app abierta).'; }
+}
+async function ensureNotificationPermission(){
+  if(typeof Notification === 'undefined') return false;
+  if(Notification.permission === 'granted'){ notifPermission='granted'; updateNotifHint(); return true; }
+  if(Notification.permission === 'denied'){ notifPermission='denied'; updateNotifHint(); return false; }
+  try{
+    const perm = await Notification.requestPermission();
+    notifPermission = perm; updateNotifHint();
+    return perm === 'granted';
+  }catch(err){ return false; }
+}
+
+// Exportar a Apple Calendar / Google Calendar
+const ICS_DAY_CODE = { Lun:'MO', Mar:'TU', Mié:'WE', Jue:'TH', Vie:'FR', Sáb:'SA', Dom:'SU' };
+const ICS_DAY_NUM  = { Lun:1, Mar:2, Mié:3, Jue:4, Vie:5, Sáb:6, Dom:0 };
+const SEMESTER_START = new Date(2026, 7, 3);
+const SEMESTER_END   = new Date(2026, 10, 28); 
+function icsEscape(s){ return (s||'').replace(/\\/g,'\\\\').replace(/;/g,'\\;').replace(/,/g,'\\,').replace(/\n/g,'\\n'); }
+function icsDate(y,m,d,hh,mm){ return `${y}${pad2(m+1)}${pad2(d)}T${pad2(hh)}${pad2(mm)}00`; }
+function firstOccurrenceOnOrAfter(startDate, targetDayNum){
+  const d = new Date(startDate);
+  const diff = (targetDayNum - d.getDay() + 7) % 7;
+  d.setDate(d.getDate() + diff); return d;
+}
+function triggerDownload(filename, content){
+  try{
+    const blob = new Blob([content], {type:'text/calendar;charset=utf-8'});
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url; a.download = filename; document.body.appendChild(a);
+    a.click(); document.body.removeChild(a);
+    setTimeout(()=>URL.revokeObjectURL(url), 4000);
+  }catch(err){ alert('No se pudo generar el archivo.'); }
+}
+function buildICSHeader(calName){
+  return ['BEGIN:VCALENDAR', 'VERSION:2.0', 'PRODID:-//Horario Uniandes//ES', 'CALSCALE:GREGORIAN', `X-WR-CALNAME:${icsEscape(calName)}`].join('\r\n');
+}
+function exportScheduleICS(){
+  const lines = [buildICSHeader('Mi horario 202620')];
+  classes.forEach(cls=>{
+    const [ih, im] = cls.inicio.split(':').map(Number);
+    const [fh, fm] = cls.fin.split(':').map(Number);
+    cls.dias.forEach(day=>{
+      const dayNum = ICS_DAY_NUM[day]; if(dayNum===undefined) return;
+      const first = firstOccurrenceOnOrAfter(SEMESTER_START, dayNum);
+      const y=first.getFullYear(), m=first.getMonth(), d=first.getDate();
+      const untilStr = `${SEMESTER_END.getFullYear()}${pad2(SEMESTER_END.getMonth()+1)}${pad2(SEMESTER_END.getDate())}T235900`;
+      lines.push(
+        'BEGIN:VEVENT', `UID:${cls.id}-${day}@horario-uniandes`, `SUMMARY:${icsEscape(cls.name)}`, `DTSTART:${icsDate(y,m,d,ih,im)}`, `DTEND:${icsDate(y,m,d,fh,fm)}`,
+        `RRULE:FREQ=WEEKLY;BYDAY=${ICS_DAY_CODE[day]};UNTIL=${untilStr}`, `LOCATION:${icsEscape((cls.salon||'') + (cls.edificio? ' · '+cls.edificio : ''))}`,
+        `DESCRIPTION:${icsEscape('Profesor(a): ' + (cls.profesor||'—') + (cls.nrc ? ' · NRC ' + cls.nrc : ''))}`, 'END:VEVENT'
+      );
+    });
+  });
+  lines.push('END:VCALENDAR');
+  triggerDownload('mi-horario-202620.ics', lines.join('\r\n'));
+}
+function buildSingleEventVEVENT(key, ev){
+  const [y,m,d] = key.split('-').map(Number);
+  const [hh,mm] = (ev.time || '09:00').split(':').map(Number);
+  const start = icsDate(y, m-1, d, hh, mm);
+  const endDate = new Date(y, m-1, d, hh, mm);
+  endDate.setHours(endDate.getHours()+1);
+  const end = icsDate(endDate.getFullYear(), endDate.getMonth(), endDate.getDate(), endDate.getHours(), endDate.getMinutes());
+  const alarm = ev.reminderMinutes ? ['BEGIN:VALARM','ACTION:DISPLAY','DESCRIPTION:Recordatorio',`TRIGGER:-PT${ev.reminderMinutes}M`,'END:VALARM'] : [];
+  return ['BEGIN:VEVENT',`UID:${ev.id}@horario-uniandes`,`SUMMARY:${icsEscape(ev.title)}`,`DTSTART:${start}`,`DTEND:${end}`,ev.notes ? `DESCRIPTION:${icsEscape(ev.notes)}` : null,...alarm,'END:VEVENT'].filter(Boolean);
+}
+function exportSingleEventICS(key, id){
+  const ev = (events[key]||[]).find(e=>e.id===id); if(!ev) return;
+  const lines = [buildICSHeader(ev.title), ...buildSingleEventVEVENT(key, ev), 'END:VCALENDAR'];
+  triggerDownload(`evento-${ev.title.replace(/[^a-z0-9]+/gi,'-').toLowerCase()}.ics`, lines.join('\r\n'));
+}
+function exportEventsICS(){
+  const lines = [buildICSHeader('Mis eventos')];
+  Object.keys(events).forEach(key=>{ events[key].forEach(ev=>{ lines.push(...buildSingleEventVEVENT(key, ev)); }); });
+  lines.push('END:VCALENDAR');
+  triggerDownload('mis-eventos.ics', lines.join('\r\n'));
+}
+</script>
+</body>
+</html>
