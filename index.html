@@ -389,7 +389,6 @@
     opacity:.85;
   }
 
-  /* palette rotation for classes */
   .c0{ background:#E7DAB4; }
   .c1{ background:#D7E4DE; }
   .c2{ background:#EAD2C7; }
@@ -398,7 +397,6 @@
   .c5{ background:#D6E6ED; }
   .c6{ background:#E2E7C8; }
 
-  /* Saturday / Sesiones especiales strip */
   .saturday{
     margin-top:22px;
     background:var(--card);
@@ -443,7 +441,6 @@
     opacity:.7;
   }
 
-  /* ---- Modal ---- */
   .overlay{
     position:fixed; inset:0;
     background:rgba(27,42,74,0.45);
@@ -508,10 +505,7 @@
     color:var(--ink-soft);
     margin-bottom:5px;
   }
-  .field .view{
-    font-size:15px;
-    font-weight:500;
-  }
+  .field .view{ font-size:15px; font-weight:500; }
   .field input, .field select{
     width:100%;
     font-family:'Space Grotesk', sans-serif;
@@ -525,11 +519,7 @@
   .field input:focus, .field select:focus{ border-color:var(--teal); }
   .row2{ display:grid; grid-template-columns:1fr 1fr; gap:12px; }
   .daypicker{ display:flex; gap:6px; flex-wrap:wrap; }
-  .daypicker button{
-    padding:6px 10px;
-    font-size:12px;
-    border-radius:20px;
-  }
+  .daypicker button{ padding:6px 10px; font-size:12px; border-radius:20px; }
   .daypicker button.on{ background:var(--ink); color:var(--parchment); }
 
   .modal-foot{
@@ -551,7 +541,6 @@
     .class-block .name{ font-size:11px; }
   }
 
-  /* ---- Mobile agenda (day-by-day list) ---- */
   .agenda{ display:none; }
   @media (max-width: 620px){
     .board{ display:none; }
@@ -581,55 +570,14 @@
     color:var(--teal);
     font-weight:600;
   }
-  .agenda-day-head .full{
-    font-family:'Fraunces', serif;
-    font-size:17px;
-    font-weight:600;
-  }
-  .agenda-empty{
-    padding:14px;
-    font-family:'IBM Plex Mono', monospace;
-    font-size:12px;
-    color:var(--ink-soft);
-    font-style:italic;
-  }
-  .agenda-item{
-    display:flex;
-    gap:12px;
-    padding:12px 14px;
-    border-top:1px solid var(--line);
-    cursor:pointer;
-    align-items:flex-start;
-  }
+  .agenda-day-head .full{ font-family:'Fraunces', serif; font-size:17px; font-weight:600; }
+  .agenda-empty{ padding:14px; font-family:'IBM Plex Mono', monospace; font-size:12px; color:var(--ink-soft); font-style:italic; }
+  .agenda-item{ display:flex; gap:12px; padding:12px 14px; border-top:1px solid var(--line); cursor:pointer; align-items:flex-start; }
   .agenda-item:first-child{ border-top:none; }
-  .agenda-item:active{ background:var(--parchment-dim); }
-  .agenda-item .swatch{
-    width:5px;
-    align-self:stretch;
-    border-radius:3px;
-    flex-shrink:0;
-  }
-  .agenda-item .time{
-    font-family:'IBM Plex Mono', monospace;
-    font-size:11.5px;
-    color:var(--ink-soft);
-    width:56px;
-    flex-shrink:0;
-    line-height:1.4;
-    padding-top:2px;
-  }
-  .agenda-item .info .name{
-    font-family:'Fraunces', serif;
-    font-weight:600;
-    font-size:15px;
-    line-height:1.2;
-  }
-  .agenda-item .info .room{
-    font-family:'IBM Plex Mono', monospace;
-    font-size:11.5px;
-    color:var(--ink-soft);
-    margin-top:2px;
-  }
+  .agenda-item .swatch{ width:5px; align-self:stretch; border-radius:3px; flex-shrink:0; }
+  .agenda-item .time{ font-family:'IBM Plex Mono', monospace; font-size:11.5px; color:var(--ink-soft); width:56px; flex-shrink:0; line-height:1.4; padding-top:2px; }
+  .agenda-item .info .name{ font-family:'Fraunces', serif; font-weight:600; font-size:15px; line-height:1.2; }
+  .agenda-item .info .room{ font-family:'IBM Plex Mono', monospace; font-size:11.5px; color:var(--ink-soft); margin-top:2px; }
 </style>
 </head>
 <body>
@@ -647,7 +595,7 @@
     
     <div class="field">
       <label>¿Ya tienes un código?</label>
-      <input id="gateCodeInput" placeholder="Ej. A3F9K2" style="text-transform:uppercase; padding: 12px; font-size: 16px;" maxlength="8">
+      <input id="gateCodeInput" placeholder="Ej. A3F9K2" style="text-transform:uppercase; padding: 12px; font-size: 16px;" maxlength="8" onkeydown="if(event.key==='Enter') joinWithCode()">
     </div>
     <button class="primary" style="width:100%; padding:14px; margin-bottom:16px; font-size: 15px;" onclick="joinWithCode()">Entrar con este código</button>
     
@@ -657,7 +605,7 @@
   </div>
 </div>
 
-<!-- Aplicación Principal (Oculta al inicio) -->
+<!-- Aplicación Principal -->
 <div class="wrap" id="appRoot" style="display:none;">
 
   <header>
@@ -812,11 +760,13 @@ async function joinWithCode(){
     try{
       const snap = await db.collection('horarios').doc(input).get();
       if(!snap.exists){
-        alert('El código "' + input + '" no está registrado. Si es un horario nuevo, usa el botón de abajo para crearlo.');
-        return;
+        // Verificamos si de casualidad tiene caché local o si el usuario quiere crearlo
+        const confirmNew = confirm('El código "' + input + '" no está registrado en la nube.\n\n¿Quieres usar este código para crear un horario nuevo con él? (Pulsa Aceptar para crearlo, o Cancelar para escribir otro).');
+        if(!confirmNew) return;
       }
     }catch(err){
-      console.error('Error verificando código:', err);
+      console.warn('Advertencia de red/Firebase al verificar código:', err);
+      // Si hay un fallo de red o conectividad, permitimos entrar de todas formas para no bloquear al usuario
     }
   }
 
@@ -1365,9 +1315,6 @@ document.addEventListener('keydown', (e)=>{
   if(e.key==='Escape') closeModal();
 });
 
-// ==================================================
-// Vista: pestañas (horario semanal / calendario)
-// ==================================================
 function switchView(view){
   const weekly = document.getElementById('weeklyView');
   const cal = document.getElementById('calendarView');
@@ -1387,9 +1334,6 @@ function switchView(view){
   }
 }
 
-// ==================================================
-// Calendario de eventos
-// ==================================================
 const WEEKDAYS_SHORT = ['Dom','Lun','Mar','Mié','Jue','Vie','Sáb'];
 const MONTH_NAMES = ['Enero','Febrero','Marzo','Abril','Mayo','Junio','Julio','Agosto','Septiembre','Octubre','Noviembre','Diciembre'];
 
@@ -1595,7 +1539,6 @@ async function deleteEvent(key, id){
   renderDayEventsList(key);
 }
 
-// ---- Recordatorios ----
 let notifPermission = (typeof Notification !== 'undefined') ? Notification.permission : 'unsupported';
 function updateNotifHint(){
   const hint = document.getElementById('notifHint');
@@ -1616,7 +1559,6 @@ async function ensureNotificationPermission(){
   }catch(err){ return false; }
 }
 
-// Exportar a Apple Calendar / Google Calendar
 const ICS_DAY_CODE = { Lun:'MO', Mar:'TU', Mié:'WE', Jue:'TH', Vie:'FR', Sáb:'SA', Dom:'SU' };
 const ICS_DAY_NUM  = { Lun:1, Mar:2, Mié:3, Jue:4, Vie:5, Sáb:6, Dom:0 };
 const SEMESTER_START = new Date(2026, 7, 3);
